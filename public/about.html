@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於協會 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="認識 CILT 英國皇家物流與運輸學會。成立於1919年，獲英國皇家憲章認可，全球最具權威的物流與運輸專業組織。">
+  <meta property="og:title" content="關於協會 - CILT 台灣分會">
+  <meta property="og:description" content="成立於1919年，獲英國皇家憲章認可，全球最具權威的物流與運輸專業組織。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="roc-date-box"><span class="roc-date"></span></div>
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">關於協會</div>
+        <ul class="sidebar-menu">
+          <li><a href="#" onclick="switchAboutTab('intro'); return false;" class="active" id="tab-intro">CILT國際組織簡介</a></li>
+          <li><a href="#" onclick="switchAboutTab('mission'); return false;" id="tab-mission">宗旨</a></li>
+          <li><a href="#" onclick="switchAboutTab('taiwan'); return false;" id="tab-taiwan">台灣分會簡介</a></li>
+          <li><a href="#" onclick="switchAboutTab('recognition'); return false;" id="tab-recognition">國際總會資格承認</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-member-box">
+        <div class="box-title">會員登入</div>
+        <div class="login-form">
+          <input type="text" placeholder="帳號">
+          <input type="password" placeholder="密碼">
+          <button class="btn btn-primary btn-sm btn-block" onclick="window.location.href='/login.html'">登入</button>
+          <div class="login-links">
+            <a href="/signup.html">加入會員</a>
+            <a href="#">忘記密碼</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>關於協會</h2>
+        <span class="page-header-en">About CILT</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>關於協會</span>
+      </div>
+
+      <!-- Tab: CILT國際組織簡介 -->
+      <div id="content-intro" class="about-tab-content">
+        <div class="section-title"><h3>CILT國際組織簡介</h3></div>
+        <div style="margin-bottom: 24px;">
+          <p style="margin-bottom: 16px;">
+            英國皇家物流與運輸學會 (The Chartered Institute of Logistics and Transport, CILT) 成立於 <strong>1919 年</strong>，是世界上歷史最悠久的物流與運輸專業組織。
+          </p>
+          <p style="margin-bottom: 16px;">
+            <strong>1926 年</strong>，CILT 獲頒英國皇家特許狀 (Royal Charter)，成為全球物流與運輸領域最具權威性的國際專業組織。
+          </p>
+        </div>
+
+        <div class="grid grid-2" style="margin-bottom: 32px;">
+          <div class="card" style="text-align: center; padding: 32px;">
+            <div style="font-size: 48px; font-weight: 900; color: var(--teal); margin-bottom: 8px;">30+</div>
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">會員國家</div>
+            <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">遍布全球各大洲</div>
+          </div>
+          <div class="card" style="text-align: center; padding: 32px;">
+            <div style="font-size: 48px; font-weight: 900; color: var(--teal); margin-bottom: 8px;">30,000+</div>
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-dark);">專業會員</div>
+            <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">全球物流與運輸專業人士</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+          <h4 style="margin-bottom: 12px; font-size: 16px;">組織發展歷程</h4>
+          <table style="width: 100%;">
+            <tbody>
+              <tr><td style="padding: 8px 16px; font-weight: 600; width: 120px; color: var(--teal);">1919 年</td><td style="padding: 8px 16px;">學會正式成立</td></tr>
+              <tr><td style="padding: 8px 16px; font-weight: 600; color: var(--teal);">1926 年</td><td style="padding: 8px 16px;">獲頒英國皇家特許狀 (Royal Charter)</td></tr>
+              <tr><td style="padding: 8px 16px; font-weight: 600; color: var(--teal);">1999 年</td><td style="padding: 8px 16px;">物流學會與運輸學會合併</td></tr>
+              <tr><td style="padding: 8px 16px; font-weight: 600; color: var(--teal);">至今</td><td style="padding: 8px 16px;">持續推動全球物流與運輸專業發展</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>CILT 總部設於英國，在全球超過 30 個國家和地區設有分支機構，致力於物流與運輸專業人員的培訓、認證與國際交流。</p>
+      </div>
+
+      <!-- Tab: 宗旨 -->
+      <div id="content-mission" class="about-tab-content hidden">
+        <div class="section-title"><h3>宗旨</h3></div>
+        <p style="margin-bottom: 24px;">CILT 致力於提升全球物流與運輸產業的專業水準，以四大核心宗旨引領產業發展：</p>
+        <div class="grid grid-2">
+          <div class="card mission-card">
+            <div class="mission-icon">01</div>
+            <h3>追求職業精神</h3>
+            <p>Pursuing Logistics Professionalism</p>
+            <p style="margin-top: 12px; font-size: 14px; color: var(--text-body);">培養物流與運輸從業人員的專業態度與職業操守，建立行業專業形象。</p>
+          </div>
+          <div class="card mission-card">
+            <div class="mission-icon">02</div>
+            <h3>提升職業水準</h3>
+            <p>Promoting Logistics Profession</p>
+            <p style="margin-top: 12px; font-size: 14px; color: var(--text-body);">透過教育訓練及專業認證，持續提升從業人員的專業能力與知識水平。</p>
+          </div>
+          <div class="card mission-card">
+            <div class="mission-icon">03</div>
+            <h3>國際交流合作</h3>
+            <p>Networking Professionals Worldwide</p>
+            <p style="margin-top: 12px; font-size: 14px; color: var(--text-body);">搭建國際專業交流平台，促進各國物流與運輸專業人士的互動與合作。</p>
+          </div>
+          <div class="card mission-card">
+            <div class="mission-icon">04</div>
+            <h3>推廣最佳實踐</h3>
+            <p>Popularizing Best Practices</p>
+            <p style="margin-top: 12px; font-size: 14px; color: var(--text-body);">分享與推廣物流及運輸領域的最佳實踐經驗，促進產業持續進步。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: 台灣分會簡介 -->
+      <div id="content-taiwan" class="about-tab-content hidden">
+        <div class="section-title"><h3>台灣分會簡介</h3></div>
+        <div class="card" style="margin-bottom: 24px;">
+          <p style="margin-bottom: 16px;">
+            CILT 台灣分會隸屬於英國皇家物流與運輸學會國際總會，致力於在台灣推動物流與運輸專業認證、教育訓練及國際交流。
+          </p>
+          <p style="margin-bottom: 16px;">
+            台灣分會透過與國際總會的密切合作，引進國際級的專業認證制度，協助台灣物流與運輸從業人員取得國際認可的專業資格。
+          </p>
+          <p>
+            分會同時舉辦各類研討會、課程、參訪活動及國際論壇，為會員提供豐富的學習與交流機會。
+          </p>
+        </div>
+
+        <div class="section-title"><h3>服務項目</h3></div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px; color: var(--teal);">專業認證</h4>
+            <p style="font-size: 14px;">提供 Level 1 至 Level 4 四級國際專業認證制度</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px; color: var(--teal);">教育訓練</h4>
+            <p style="font-size: 14px;">舉辦各類物流與運輸專業課程及研討會</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px; color: var(--teal);">國際交流</h4>
+            <p style="font-size: 14px;">促進與全球各分會的專業交流與合作</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px; color: var(--teal);">產業媒合</h4>
+            <p style="font-size: 14px;">連結產業資源，促進產學合作發展</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: 國際總會資格承認 -->
+      <div id="content-recognition" class="about-tab-content hidden">
+        <div class="section-title"><h3>國際總會資格承認</h3></div>
+        <div class="card" style="margin-bottom: 24px;">
+          <p style="margin-bottom: 16px;">
+            CILT 國際總會的專業認證資格獲得全球超過 30 個國家和地區的承認，持有 CILT 認證的專業人員可在國際間獲得專業資格的認可。
+          </p>
+          <p style="margin-bottom: 16px;">
+            台灣分會所頒發的認證證書與國際總會具有同等效力，持證人員可在全球 CILT 會員國之間獲得資格互認。
+          </p>
+        </div>
+
+        <div class="section-title"><h3>認證優勢</h3></div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px;">國際認可</h4>
+            <p style="font-size: 14px;">CILT 認證在全球 30+ 國家獲得認可，提升個人國際競爭力。</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px;">專業權威</h4>
+            <p style="font-size: 14px;">擁有百年歷史的皇家特許認證，代表物流運輸領域最高專業標準。</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px;">職涯發展</h4>
+            <p style="font-size: 14px;">取得認證有助於個人職涯晉升及薪資提升。</p>
+          </div>
+          <div class="card">
+            <h4 style="font-size: 16px; margin-bottom: 8px;">持續學習</h4>
+            <p style="font-size: 14px;">透過認證體系持續精進專業知識與技能。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    function switchAboutTab(tab) {
+      // Hide all tab content
+      document.querySelectorAll('.about-tab-content').forEach(el => el.classList.add('hidden'));
+      // Remove active from all sidebar links
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      // Show selected tab
+      document.getElementById('content-' + tab).classList.remove('hidden');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+  </script>
+</body>
+</html>

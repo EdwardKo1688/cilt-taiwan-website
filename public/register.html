@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>線上報名 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 台灣分會線上報名：認證課程、研討會、一般課程，線上繳費一站完成。">
+  <meta property="og:title" content="線上報名 - CILT 台灣分會">
+  <meta property="og:description" content="認證課程、研討會、一般課程報名與線上繳費。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link active">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <main class="main-content">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">›</span>
+        <span>線上報名</span>
+      </div>
+
+      <div class="page-header" style="margin: 0 -32px 24px; padding: 20px 32px;">
+        <div class="page-header-icon"></div>
+        <h2>線上報名</h2>
+        <span class="page-header-en">Online Registration</span>
+      </div>
+
+      <!-- Steps indicator (hidden by default, shown during registration flow) -->
+      <div id="registration-steps" class="hidden">
+        <div class="steps">
+          <div class="step active" data-step="1">
+            <div class="step-number">1</div>
+            <span class="step-label">選擇課程</span>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-number">2</div>
+            <span class="step-label">確認資料</span>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-number">3</div>
+            <span class="step-label">線上繳費</span>
+          </div>
+          <div class="step" data-step="4">
+            <div class="step-number">4</div>
+            <span class="step-label">報名完成</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div id="filter-section" class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">報名類別</label>
+          <select id="filter-type" class="form-control" onchange="loadCourses()">
+            <option value="">全部類別</option>
+            <option value="certification">認證課程</option>
+            <option value="general">一般課程</option>
+            <option value="seminar">研討會</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">關鍵字</label>
+          <input type="text" id="filter-keyword" class="form-control" placeholder="搜尋課程名稱..." onkeyup="debounceSearch()">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" onclick="loadCourses()">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Course list -->
+      <div id="course-list" class="grid grid-3">
+        <div class="loading" style="grid-column: 1/-1;"><div class="spinner"></div>載入中...</div>
+      </div>
+      <div id="course-pagination"></div>
+
+      <!-- Registration confirm (hidden) -->
+      <div id="confirm-section" class="hidden">
+        <div class="card" style="max-width: 640px; margin: 0 auto;">
+          <h3 style="margin-bottom: 24px;">確認報名資料</h3>
+          <div id="confirm-course-info" style="margin-bottom: 24px;"></div>
+          <div id="confirm-member-info" style="margin-bottom: 24px;"></div>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button class="btn btn-outline-teal" onclick="cancelRegistration()">取消</button>
+            <button class="btn btn-primary" onclick="submitRegistration()">確認報名並前往繳費</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registration complete (hidden) -->
+      <div id="complete-section" class="hidden">
+        <div class="card" style="max-width: 640px; margin: 0 auto; text-align: center; padding: 48px;">
+          <div style="font-size: 64px; margin-bottom: 16px;">✓</div>
+          <h2 style="margin-bottom: 12px;">報名成功！</h2>
+          <p class="text-light" id="complete-message">您已成功報名課程</p>
+          <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+            <a href="/member/my-courses.html" class="btn btn-primary">查看我的報名</a>
+            <a href="/register.html" class="btn btn-outline-teal">繼續報名</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright © 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let currentPage = 1;
+    let selectedCourse = null;
+    let searchTimer = null;
+
+    function debounceSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadCourses, 300);
+    }
+
+    async function loadCourses(page = 1) {
+      currentPage = page;
+      const type = document.getElementById('filter-type').value;
+      const keyword = document.getElementById('filter-keyword').value;
+      const container = document.getElementById('course-list');
+      container.innerHTML = '<div class="loading" style="grid-column:1/-1;"><div class="spinner"></div>載入中...</div>';
+
+      try {
+        const params = { page, limit: 9 };
+        if (type) params.type = type;
+        if (keyword) params.keyword = keyword;
+        const result = await API.get('/courses', params);
+
+        if (result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">📋</div><p>目前沒有可報名的課程</p></div>';
+          document.getElementById('course-pagination').innerHTML = '';
+          return;
+        }
+
+        container.innerHTML = result.data.map(course => {
+          const isFull = course.max_seats && course.enrolled_count >= course.max_seats;
+          return `
+            <div class="card">
+              <div class="card-header">
+                <span class="tag tag-${course.type === 'certification' ? 'yellow' : course.type === 'seminar' ? 'blue' : 'teal'}">
+                  ${COURSE_TYPES[course.type] || course.type}
+                </span>
+                ${course.cert_level_id ? `<span class="tag tag-gray" style="margin-left: 4px;">Level ${course.cert_level_id}</span>` : ''}
+              </div>
+              <h3 class="card-title" style="font-size: 16px; margin-top: 8px;">${escapeHtml(course.title)}</h3>
+              <p class="card-body" style="font-size: 14px; margin-top: 8px; min-height: 40px;">
+                ${escapeHtml(course.description || '').substring(0, 80)}${course.description?.length > 80 ? '...' : ''}
+              </p>
+              <div style="margin-top: 12px; font-size: 13px; color: var(--text-light);">
+                <p>📅 ${course.start_date ? formatDate(course.start_date) : '-'} ~ ${course.end_date ? formatDate(course.end_date) : '-'}</p>
+                <p>📍 ${escapeHtml(course.location || '-')}</p>
+                <p>💰 ${course.fee ? formatMoney(course.fee) : '免費'}</p>
+                <p>👥 ${course.max_seats ? `${course.enrolled_count || 0} / ${course.max_seats} 人` : '不限人數'}</p>
+              </div>
+              <div class="card-footer">
+                ${isFull
+                  ? '<button class="btn btn-sm btn-block" disabled>額滿</button>'
+                  : `<button class="btn btn-primary btn-sm btn-block" onclick="selectCourse(${course.id})">立即報名</button>`
+                }
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        renderPagination(document.getElementById('course-pagination'), {
+          page: result.page,
+          totalPages: result.totalPages,
+          onChange: loadCourses
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p>載入失敗，請稍後再試</p></div>';
+      }
+    }
+
+    async function selectCourse(courseId) {
+      if (!requireLogin()) return;
+
+      try {
+        const course = await API.get(`/courses/${courseId}`);
+        selectedCourse = course;
+
+        const member = API.getMember();
+
+        document.getElementById('filter-section').classList.add('hidden');
+        document.getElementById('course-list').classList.add('hidden');
+        document.getElementById('course-pagination').classList.add('hidden');
+        document.getElementById('registration-steps').classList.remove('hidden');
+        document.getElementById('confirm-section').classList.remove('hidden');
+
+        // Update steps
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active', 'completed'));
+        document.querySelector('.step[data-step="1"]').classList.add('completed');
+        document.querySelector('.step[data-step="2"]').classList.add('active');
+
+        document.getElementById('confirm-course-info').innerHTML = `
+          <div style="padding: 16px; background: var(--gray-50); border-radius: var(--radius-sm);">
+            <h4 style="margin-bottom: 8px;">${escapeHtml(course.title)}</h4>
+            <p style="font-size: 13px; color: var(--text-light);">
+              ${course.start_date ? formatDate(course.start_date) : '-'} ~ ${course.end_date ? formatDate(course.end_date) : '-'}
+              ｜${escapeHtml(course.location || '-')}
+            </p>
+            <p style="font-size: 16px; font-weight: 700; color: var(--gold); margin-top: 8px;">
+              ${course.fee ? formatMoney(course.fee) : '免費'}
+            </p>
+          </div>
+        `;
+
+        document.getElementById('confirm-member-info').innerHTML = `
+          <div style="padding: 16px; background: var(--gray-50); border-radius: var(--radius-sm);">
+            <h4 style="margin-bottom: 8px;">報名人資料</h4>
+            <p style="font-size: 14px;"><strong>姓名：</strong>${escapeHtml(member?.name || '-')}</p>
+            <p style="font-size: 14px;"><strong>Email：</strong>${escapeHtml(member?.email || '-')}</p>
+            <p style="font-size: 14px;"><strong>電話：</strong>${escapeHtml(member?.phone || '-')}</p>
+            <p style="font-size: 14px;"><strong>公司：</strong>${escapeHtml(member?.company || '-')}</p>
+          </div>
+        `;
+      } catch (err) {
+        showToast(err.message || '載入課程資料失敗', 'error');
+      }
+    }
+
+    function cancelRegistration() {
+      selectedCourse = null;
+      document.getElementById('registration-steps').classList.add('hidden');
+      document.getElementById('confirm-section').classList.add('hidden');
+      document.getElementById('filter-section').classList.remove('hidden');
+      document.getElementById('course-list').classList.remove('hidden');
+      document.getElementById('course-pagination').classList.remove('hidden');
+    }
+
+    async function submitRegistration() {
+      if (!selectedCourse) return;
+
+      try {
+        // Update steps
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.querySelector('.step[data-step="2"]').classList.add('completed');
+        document.querySelector('.step[data-step="3"]').classList.add('active');
+
+        const result = await API.post('/registrations', { course_id: selectedCourse.id });
+
+        if (selectedCourse.fee > 0 && result.registration_id) {
+          // Initiate payment
+          try {
+            const payment = await API.post('/payments/create', { registration_id: result.registration_id });
+            if (payment.payment_form_html) {
+              document.body.insertAdjacentHTML('beforeend', payment.payment_form_html);
+              return;
+            }
+          } catch (payErr) {
+            showToast('報名成功，但付款初始化失敗，請至會員中心完成繳費', 'warning');
+          }
+        }
+
+        // Free course or payment skip
+        showComplete(`您已成功報名「${selectedCourse.title}」${selectedCourse.fee > 0 ? '，請至會員中心完成繳費' : ''}`);
+      } catch (err) {
+        showToast(err.message || '報名失敗', 'error');
+      }
+    }
+
+    function showComplete(message) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.step').forEach(s => s.classList.add('completed'));
+      document.querySelector('.step[data-step="4"]').classList.add('active');
+
+      document.getElementById('confirm-section').classList.add('hidden');
+      document.getElementById('complete-section').classList.remove('hidden');
+      document.getElementById('complete-message').textContent = message;
+    }
+
+    // Check for payment return
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      document.getElementById('filter-section').classList.add('hidden');
+      document.getElementById('course-list').classList.add('hidden');
+      document.getElementById('course-pagination').classList.add('hidden');
+      document.getElementById('registration-steps').classList.remove('hidden');
+      showComplete('付款成功！您的報名已確認。');
+    } else {
+      loadCourses();
+    }
+  </script>
+</body>
+</html>

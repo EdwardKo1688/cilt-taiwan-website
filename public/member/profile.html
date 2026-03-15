@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>個人資料 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">會員中心</div>
+        <ul class="sidebar-menu">
+          <li><a href="/member/dashboard.html">Dashboard</a></li>
+          <li><a href="/member/profile.html" class="active">個人資料</a></li>
+          <li><a href="/member/my-courses.html">我的報名</a></li>
+          <li><a href="/member/my-certs.html">我的認證</a></li>
+          <li><a href="/member/payments.html">繳費紀錄</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>個人資料</h2>
+        <span class="page-header-en">Profile</span>
+      </div>
+
+      <div style="padding: 24px; max-width: 640px;">
+        <div class="section-title">
+          <h3>基本資料</h3>
+        </div>
+
+        <form id="profile-form">
+          <div class="form-group">
+            <label class="form-label">電子信箱</label>
+            <input type="email" id="email" class="form-control" readonly style="background: var(--gray-50); cursor: not-allowed;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">姓名 <span class="required">*</span></label>
+            <input type="text" id="name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">手機號碼</label>
+            <input type="tel" id="phone" class="form-control">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">公司名稱</label>
+              <input type="text" id="company" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">職稱</label>
+              <input type="text" id="title" class="form-control">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="save-btn">儲存變更</button>
+        </form>
+
+        <div class="section-title" style="margin-top: 48px;">
+          <h3>變更密碼</h3>
+        </div>
+
+        <form id="password-form">
+          <div class="form-group">
+            <label class="form-label">目前密碼 <span class="required">*</span></label>
+            <input type="password" id="current-password" class="form-control" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">新密碼 <span class="required">*</span></label>
+              <input type="password" id="new-password" class="form-control" required minlength="8" placeholder="至少 8 個字元">
+            </div>
+            <div class="form-group">
+              <label class="form-label">確認新密碼 <span class="required">*</span></label>
+              <input type="password" id="confirm-password" class="form-control" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-outline-teal" id="password-btn">變更密碼</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!requireLogin()) return;
+
+      loadProfile();
+
+      // Save profile
+      document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+        btn.textContent = '儲存中...';
+
+        try {
+          const result = await API.put('/members/profile', {
+            name: document.getElementById('name').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            company: document.getElementById('company').value.trim(),
+            title: document.getElementById('title').value.trim()
+          });
+          API.setMember(result.member || result);
+          showToast('資料已更新');
+        } catch (err) {
+          showToast(err.message || '更新失敗', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '儲存變更';
+        }
+      });
+
+      // Change password
+      document.getElementById('password-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('password-btn');
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (newPassword.length < 8) {
+          showToast('新密碼至少需要 8 個字元', 'error');
+          return;
+        }
+        if (newPassword !== confirmPassword) {
+          showToast('兩次密碼輸入不一致', 'error');
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '變更中...';
+
+        try {
+          await API.post('/auth/change-password', {
+            currentPassword,
+            newPassword
+          });
+          showToast('密碼已變更');
+          document.getElementById('password-form').reset();
+        } catch (err) {
+          showToast(err.message || '變更失敗', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '變更密碼';
+        }
+      });
+    });
+
+    async function loadProfile() {
+      try {
+        const result = await API.get('/auth/me');
+        const member = result.member || result;
+        document.getElementById('email').value = member.email || '';
+        document.getElementById('name').value = member.name || '';
+        document.getElementById('phone').value = member.phone || '';
+        document.getElementById('company').value = member.company || '';
+        document.getElementById('title').value = member.title || '';
+      } catch (err) {
+        showToast('載入資料失敗', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

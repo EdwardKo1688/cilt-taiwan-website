@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>會員中心 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">會員中心</div>
+        <ul class="sidebar-menu">
+          <li><a href="/member/dashboard.html" class="active">Dashboard</a></li>
+          <li><a href="/member/profile.html">個人資料</a></li>
+          <li><a href="/member/my-courses.html">我的報名</a></li>
+          <li><a href="/member/my-certs.html">我的認證</a></li>
+          <li><a href="/member/payments.html">繳費紀錄</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>會員中心</h2>
+        <span class="page-header-en">Member Dashboard</span>
+      </div>
+
+      <div style="padding: 24px;">
+        <div style="background: linear-gradient(135deg, var(--navy-dark), var(--navy)); border-radius: var(--radius); padding: 32px; margin-bottom: 32px; color: var(--white);">
+          <h2 style="color: var(--white); margin-bottom: 8px;">歡迎回來，<span id="welcome-name">會員</span>！</h2>
+          <p style="color: rgba(255,255,255,0.7); font-size: 15px;">這是您的 CILT 會員儀表板，您可以在這裡管理個人資料與查看報名紀錄。</p>
+        </div>
+
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <div class="stat-label">CILT 認證等級</div>
+            <div class="stat-value" id="stat-level">-</div>
+            <div class="stat-sub">目前等級</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">報名課程數</div>
+            <div class="stat-value" id="stat-courses">0</div>
+            <div class="stat-sub">已報名課程</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">繳費紀錄</div>
+            <div class="stat-value" id="stat-payments">0</div>
+            <div class="stat-sub">筆繳費紀錄</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">會員狀態</div>
+            <div class="stat-value" id="stat-status" style="font-size: 20px;">-</div>
+            <div class="stat-sub">帳號狀態</div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h3>最近報名紀錄</h3>
+        </div>
+        <div id="recent-registrations">
+          <div class="loading"><div class="spinner"></div>載入中...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    const STATUS_MAP = {
+      pending: '待繳費',
+      paid: '已繳費',
+      confirmed: '已確認',
+      cancelled: '已取消'
+    };
+    const STATUS_TAG = {
+      pending: 'tag-yellow',
+      paid: 'tag-blue',
+      confirmed: 'tag-green',
+      cancelled: 'tag-red'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!requireLogin()) return;
+
+      loadDashboard();
+    });
+
+    async function loadDashboard() {
+      try {
+        // Load member info
+        const memberResult = await API.get('/auth/me');
+        const member = memberResult.member || memberResult;
+        API.setMember(member);
+
+        document.getElementById('welcome-name').textContent = escapeHtml(member.name || '會員');
+        document.getElementById('stat-level').textContent = CILT_LEVELS[member.cilt_level] || '尚未取得';
+        document.getElementById('stat-status').textContent = member.is_verified ? '已驗證' : '未驗證';
+
+        // Load registrations
+        const regResult = await API.get('/registrations/my');
+        const registrations = regResult.data || regResult || [];
+
+        document.getElementById('stat-courses').textContent = registrations.length;
+        const paidCount = registrations.filter(r => r.payment_status === 'paid' || r.payment_status === 'confirmed').length;
+        document.getElementById('stat-payments').textContent = paidCount;
+
+        // Render recent registrations
+        const container = document.getElementById('recent-registrations');
+        if (registrations.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>尚無報名紀錄</p><p style="margin-top:8px;"><a href="/register.html" class="btn btn-outline-teal btn-sm">前往報名</a></p></div>';
+          return;
+        }
+
+        const recent = registrations.slice(0, 5);
+        container.innerHTML = recent.map(reg => `
+          <div class="list-item">
+            <div class="item-date">${formatDate(reg.created_at)}</div>
+            <div class="item-tag"><span class="tag ${STATUS_TAG[reg.payment_status] || 'tag-gray'}">${STATUS_MAP[reg.payment_status] || reg.payment_status}</span></div>
+            <div class="item-title">${escapeHtml(reg.activity_title || reg.course_title || '課程報名')}</div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        document.getElementById('recent-registrations').innerHTML = '<div class="empty-state"><p>載入失敗，請重新整理頁面</p></div>';
+      }
+    }
+  </script>
+</body>
+</html>

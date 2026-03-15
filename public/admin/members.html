@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>會員管理 - CILT 管理後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/members.html">會員管理</a>
+      <a href="/admin/content.html">內容管理</a>
+      <a href="/admin/registrations.html">報名管理</a>
+      <a href="/admin/payments.html">繳費管理</a>
+    </aside>
+    <div class="admin-main">
+      <div class="flex-between mb-3">
+        <h2>會員管理</h2>
+        <button class="btn btn-outline-teal btn-sm" onclick="exportCSV()">匯出 CSV</button>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">關鍵字搜尋</label>
+          <input type="text" class="form-control" id="filter-keyword" placeholder="姓名、Email、公司...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">角色</label>
+          <select class="form-control" id="filter-role">
+            <option value="">全部</option>
+            <option value="member">一般會員</option>
+            <option value="admin">管理員</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">狀態</label>
+          <select class="form-control" id="filter-status">
+            <option value="">全部</option>
+            <option value="active">啟用</option>
+            <option value="inactive">停用</option>
+            <option value="suspended">停權</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CILT 等級</label>
+          <select class="form-control" id="filter-cilt-level">
+            <option value="">全部</option>
+            <option value="0">無</option>
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" onclick="loadMembers(1)">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>姓名</th>
+              <th>Email</th>
+              <th>公司</th>
+              <th>CILT 等級</th>
+              <th>角色</th>
+              <th>狀態</th>
+              <th>建立時間</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody">
+            <tr><td colspan="9" class="loading"><div class="spinner"></div>載入中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="members-pagination" class="mt-3"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    let currentPage = 1;
+
+    function getFilters() {
+      return {
+        keyword: document.getElementById('filter-keyword').value,
+        role: document.getElementById('filter-role').value,
+        status: document.getElementById('filter-status').value,
+        cilt_level: document.getElementById('filter-cilt-level').value
+      };
+    }
+
+    async function loadMembers(page) {
+      currentPage = page || 1;
+      const filters = getFilters();
+      const params = { page: currentPage, limit: 20 };
+      if (filters.keyword) params.keyword = filters.keyword;
+      if (filters.role) params.role = filters.role;
+      if (filters.status) params.status = filters.status;
+      if (filters.cilt_level !== '') params.cilt_level = filters.cilt_level;
+
+      try {
+        const result = await API.get('/admin/members', params);
+        const members = result.data || [];
+        const tbody = document.getElementById('members-tbody');
+
+        if (members.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><p>無符合條件的會員</p></td></tr>';
+        } else {
+          tbody.innerHTML = members.map(function (m) {
+            return '<tr>' +
+              '<td>' + m.id + '</td>' +
+              '<td>' + escapeHtml(m.name) + '</td>' +
+              '<td>' + escapeHtml(m.email) + '</td>' +
+              '<td>' + escapeHtml(m.company || '-') + '</td>' +
+              '<td>' + (CILT_LEVELS[m.cilt_level] || '-') + '</td>' +
+              '<td>' + statusTag(m.role, ROLE_LABELS) + '</td>' +
+              '<td>' + statusTag(m.status, STATUS_LABELS) + '</td>' +
+              '<td>' + formatDate(m.created_at) + '</td>' +
+              '<td><button class="btn btn-sm btn-outline-teal" onclick="editMember(' + m.id + ')">編輯</button></td>' +
+              '</tr>';
+          }).join('');
+        }
+
+        renderPagination(document.getElementById('members-pagination'), {
+          page: currentPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadMembers
+        });
+      } catch (err) {
+        showToast('載入會員資料失敗', 'error');
+      }
+    }
+
+    async function editMember(id) {
+      try {
+        const result = await API.get('/admin/members/' + id);
+        const m = result.data || result;
+        const html = '<form id="edit-member-form">' +
+          '<div class="form-group">' +
+            '<label class="form-label">姓名</label>' +
+            '<input type="text" class="form-control" name="name" value="' + escapeHtml(m.name || '') + '">' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label class="form-label">電話</label>' +
+            '<input type="text" class="form-control" name="phone" value="' + escapeHtml(m.phone || '') + '">' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<div class="form-group">' +
+              '<label class="form-label">公司</label>' +
+              '<input type="text" class="form-control" name="company" value="' + escapeHtml(m.company || '') + '">' +
+            '</div>' +
+            '<div class="form-group">' +
+              '<label class="form-label">職稱</label>' +
+              '<input type="text" class="form-control" name="title" value="' + escapeHtml(m.title || '') + '">' +
+            '</div>' +
+          '</div>' +
+          '<div class="form-row">' +
+            '<div class="form-group">' +
+              '<label class="form-label">角色</label>' +
+              '<select class="form-control" name="role">' +
+                '<option value="member"' + (m.role === 'member' ? ' selected' : '') + '>一般會員</option>' +
+                '<option value="admin"' + (m.role === 'admin' ? ' selected' : '') + '>管理員</option>' +
+              '</select>' +
+            '</div>' +
+            '<div class="form-group">' +
+              '<label class="form-label">CILT 等級</label>' +
+              '<select class="form-control" name="cilt_level">' +
+                '<option value="0"' + (m.cilt_level == 0 ? ' selected' : '') + '>無</option>' +
+                '<option value="1"' + (m.cilt_level == 1 ? ' selected' : '') + '>Level 1</option>' +
+                '<option value="2"' + (m.cilt_level == 2 ? ' selected' : '') + '>Level 2</option>' +
+                '<option value="3"' + (m.cilt_level == 3 ? ' selected' : '') + '>Level 3</option>' +
+                '<option value="4"' + (m.cilt_level == 4 ? ' selected' : '') + '>Level 4</option>' +
+              '</select>' +
+            '</div>' +
+          '</div>' +
+          '<div class="form-group">' +
+            '<label class="form-label">狀態</label>' +
+            '<select class="form-control" name="status">' +
+              '<option value="active"' + (m.status === 'active' ? ' selected' : '') + '>啟用</option>' +
+              '<option value="inactive"' + (m.status === 'inactive' ? ' selected' : '') + '>停用</option>' +
+              '<option value="suspended"' + (m.status === 'suspended' ? ' selected' : '') + '>停權</option>' +
+            '</select>' +
+          '</div>' +
+          '<div class="modal-footer" style="padding: 16px 0 0; border-top: 1px solid var(--gray-200);">' +
+            '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+            '<button type="submit" class="btn btn-primary">儲存</button>' +
+          '</div>' +
+        '</form>';
+
+        openModal('編輯會員 #' + id, html);
+
+        document.getElementById('edit-member-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const fd = new FormData(this);
+          const body = {};
+          fd.forEach(function (v, k) { body[k] = v; });
+          body.cilt_level = parseInt(body.cilt_level);
+          try {
+            await API.put('/admin/members/' + id, body);
+            showToast('會員資料已更新');
+            closeModal();
+            loadMembers(currentPage);
+          } catch (err) {
+            showToast(err.message || '更新失敗', 'error');
+          }
+        });
+      } catch (err) {
+        showToast('載入會員資料失敗', 'error');
+      }
+    }
+
+    function exportCSV() {
+      const token = API.getToken();
+      window.open(API.baseURL + '/admin/members/export?token=' + encodeURIComponent(token));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (API.isAdmin()) loadMembers(1);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /member/
+Disallow: /api/
+
+Sitemap: https://www.cilt.org.tw/sitemap.xml

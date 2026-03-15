@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>內容管理 - CILT 管理後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 24px; }
+    .tab-btn {
+      padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+      border: none; background: none; color: var(--text-light);
+      border-bottom: 2px solid transparent; margin-bottom: -2px; transition: var(--transition);
+    }
+    .tab-btn:hover { color: var(--text-dark); }
+    .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/members.html">會員管理</a>
+      <a href="/admin/content.html">內容管理</a>
+      <a href="/admin/registrations.html">報名管理</a>
+      <a href="/admin/payments.html">繳費管理</a>
+    </aside>
+    <div class="admin-main">
+      <div class="flex-between mb-3">
+        <h2>內容管理</h2>
+      </div>
+
+      <!-- Tab navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="news">最新消息</button>
+        <button class="tab-btn" data-tab="activities">活動</button>
+        <button class="tab-btn" data-tab="downloads">下載</button>
+        <button class="tab-btn" data-tab="columns">經驗分享</button>
+        <button class="tab-btn" data-tab="courses">課程</button>
+      </div>
+
+      <!-- News tab -->
+      <div class="tab-panel active" id="tab-news">
+        <div class="flex-between mb-2">
+          <span class="text-light">最新消息列表</span>
+          <button class="btn btn-primary btn-sm" onclick="addNews()">新增消息</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>ID</th><th>標題</th><th>分類</th><th>摘要</th><th>建立時間</th><th>操作</th></tr></thead>
+            <tbody id="news-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div>載入中...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="news-pagination" class="mt-3"></div>
+      </div>
+
+      <!-- Activities tab -->
+      <div class="tab-panel" id="tab-activities">
+        <div class="flex-between mb-2">
+          <span class="text-light">活動列表</span>
+          <button class="btn btn-primary btn-sm" onclick="addActivity()">新增活動</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>ID</th><th>標題</th><th>分類</th><th>活動日期</th><th>地點</th><th>操作</th></tr></thead>
+            <tbody id="activities-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div>載入中...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="activities-pagination" class="mt-3"></div>
+      </div>
+
+      <!-- Downloads tab -->
+      <div class="tab-panel" id="tab-downloads">
+        <div class="flex-between mb-2">
+          <span class="text-light">下載檔案列表</span>
+          <button class="btn btn-primary btn-sm" onclick="addDownload()">新增檔案</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>ID</th><th>標題</th><th>分類</th><th>檔案</th><th>僅限會員</th><th>操作</th></tr></thead>
+            <tbody id="downloads-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div>載入中...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="downloads-pagination" class="mt-3"></div>
+      </div>
+
+      <!-- Columns tab -->
+      <div class="tab-panel" id="tab-columns">
+        <div class="flex-between mb-2">
+          <span class="text-light">經驗分享列表</span>
+          <button class="btn btn-primary btn-sm" onclick="addColumn()">新增文章</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>ID</th><th>標題</th><th>作者</th><th>內容摘要</th><th>建立時間</th><th>操作</th></tr></thead>
+            <tbody id="columns-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div>載入中...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="columns-pagination" class="mt-3"></div>
+      </div>
+
+      <!-- Courses tab -->
+      <div class="tab-panel" id="tab-courses">
+        <div class="flex-between mb-2">
+          <span class="text-light">課程列表</span>
+          <button class="btn btn-primary btn-sm" onclick="addCourse()">新增課程</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>ID</th><th>標題</th><th>類型</th><th>日期</th><th>地點</th><th>費用</th><th>名額</th><th>操作</th></tr></thead>
+            <tbody id="courses-tbody"><tr><td colspan="8" class="loading"><div class="spinner"></div>載入中...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="courses-pagination" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== NEWS =====
+    var newsPage = 1;
+    async function loadNews(page) {
+      newsPage = page || 1;
+      try {
+        var result = await API.get('/admin/news', { page: newsPage, limit: 20 });
+        var items = result.data || [];
+        var tbody = document.getElementById('news-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>暫無資料</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (item) {
+            return '<tr><td>' + item.id + '</td><td>' + escapeHtml(item.title) + '</td>' +
+              '<td>' + (NEWS_CATEGORIES[item.category] || item.category || '-') + '</td>' +
+              '<td>' + escapeHtml((item.summary || '').substring(0, 50)) + '</td>' +
+              '<td>' + formatDate(item.created_at) + '</td>' +
+              '<td>' +
+                '<button class="btn btn-sm btn-outline-teal" onclick="editNews(' + item.id + ')">編輯</button> ' +
+                '<button class="btn btn-sm btn-danger" onclick="deleteItem(\'news\', ' + item.id + ')">刪除</button>' +
+              '</td></tr>';
+          }).join('');
+        }
+        renderPagination(document.getElementById('news-pagination'), { page: newsPage, totalPages: result.totalPages || 1, onChange: loadNews });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    function newsFormHtml(item) {
+      var n = item || {};
+      return '<form id="content-form">' +
+        '<div class="form-group"><label class="form-label">標題</label><input type="text" class="form-control" name="title" value="' + escapeHtml(n.title || '') + '" required></div>' +
+        '<div class="form-group"><label class="form-label">分類</label><select class="form-control" name="category">' +
+          '<option value="announcement"' + (n.category === 'announcement' ? ' selected' : '') + '>協會公告</option>' +
+          '<option value="course_info"' + (n.category === 'course_info' ? ' selected' : '') + '>課程資訊</option>' +
+          '<option value="activity"' + (n.category === 'activity' ? ' selected' : '') + '>活動</option>' +
+        '</select></div>' +
+        '<div class="form-group"><label class="form-label">摘要</label><input type="text" class="form-control" name="summary" value="' + escapeHtml(n.summary || '') + '"></div>' +
+        '<div class="form-group"><label class="form-label">內容</label><textarea class="form-control" name="content" rows="6">' + escapeHtml(n.content || '') + '</textarea></div>' +
+        '<div class="modal-footer" style="padding:16px 0 0;border-top:1px solid var(--gray-200);">' +
+          '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+          '<button type="submit" class="btn btn-primary">儲存</button>' +
+        '</div></form>';
+    }
+
+    function addNews() {
+      openModal('新增消息', newsFormHtml());
+      document.getElementById('content-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+        try { await API.post('/admin/news', body); showToast('新增成功'); closeModal(); loadNews(1); }
+        catch (err) { showToast(err.message || '新增失敗', 'error'); }
+      });
+    }
+
+    async function editNews(id) {
+      try {
+        var result = await API.get('/admin/news/' + id);
+        var item = result.data || result;
+        openModal('編輯消息 #' + id, newsFormHtml(item));
+        document.getElementById('content-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+          try { await API.put('/admin/news/' + id, body); showToast('更新成功'); closeModal(); loadNews(newsPage); }
+          catch (err) { showToast(err.message || '更新失敗', 'error'); }
+        });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    // ===== ACTIVITIES =====
+    var activitiesPage = 1;
+    async function loadActivities(page) {
+      activitiesPage = page || 1;
+      try {
+        var result = await API.get('/admin/activities', { page: activitiesPage, limit: 20 });
+        var items = result.data || [];
+        var tbody = document.getElementById('activities-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>暫無資料</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (item) {
+            return '<tr><td>' + item.id + '</td><td>' + escapeHtml(item.title) + '</td>' +
+              '<td>' + (ACTIVITY_CATEGORIES[item.category] || item.category || '-') + '</td>' +
+              '<td>' + formatDate(item.event_date) + '</td>' +
+              '<td>' + escapeHtml(item.location || '-') + '</td>' +
+              '<td>' +
+                '<button class="btn btn-sm btn-outline-teal" onclick="editActivity(' + item.id + ')">編輯</button> ' +
+                '<button class="btn btn-sm btn-danger" onclick="deleteItem(\'activities\', ' + item.id + ')">刪除</button>' +
+              '</td></tr>';
+          }).join('');
+        }
+        renderPagination(document.getElementById('activities-pagination'), { page: activitiesPage, totalPages: result.totalPages || 1, onChange: loadActivities });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    function activityFormHtml(item) {
+      var a = item || {};
+      return '<form id="content-form">' +
+        '<div class="form-group"><label class="form-label">標題</label><input type="text" class="form-control" name="title" value="' + escapeHtml(a.title || '') + '" required></div>' +
+        '<div class="form-group"><label class="form-label">分類</label><select class="form-control" name="category">' +
+          Object.keys(ACTIVITY_CATEGORIES).map(function (k) {
+            return '<option value="' + k + '"' + (a.category === k ? ' selected' : '') + '>' + ACTIVITY_CATEGORIES[k] + '</option>';
+          }).join('') +
+        '</select></div>' +
+        '<div class="form-group"><label class="form-label">說明</label><textarea class="form-control" name="description" rows="4">' + escapeHtml(a.description || '') + '</textarea></div>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">活動日期</label><input type="date" class="form-control" name="event_date" value="' + (a.event_date ? a.event_date.substring(0, 10) : '') + '"></div>' +
+          '<div class="form-group"><label class="form-label">地點</label><input type="text" class="form-control" name="location" value="' + escapeHtml(a.location || '') + '"></div>' +
+        '</div>' +
+        '<div class="modal-footer" style="padding:16px 0 0;border-top:1px solid var(--gray-200);">' +
+          '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+          '<button type="submit" class="btn btn-primary">儲存</button>' +
+        '</div></form>';
+    }
+
+    function addActivity() {
+      openModal('新增活動', activityFormHtml());
+      document.getElementById('content-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+        try { await API.post('/admin/activities', body); showToast('新增成功'); closeModal(); loadActivities(1); }
+        catch (err) { showToast(err.message || '新增失敗', 'error'); }
+      });
+    }
+
+    async function editActivity(id) {
+      try {
+        var result = await API.get('/admin/activities/' + id);
+        var item = result.data || result;
+        openModal('編輯活動 #' + id, activityFormHtml(item));
+        document.getElementById('content-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+          try { await API.put('/admin/activities/' + id, body); showToast('更新成功'); closeModal(); loadActivities(activitiesPage); }
+          catch (err) { showToast(err.message || '更新失敗', 'error'); }
+        });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    // ===== DOWNLOADS =====
+    var downloadsPage = 1;
+    async function loadDownloads(page) {
+      downloadsPage = page || 1;
+      try {
+        var result = await API.get('/admin/downloads', { page: downloadsPage, limit: 20 });
+        var items = result.data || [];
+        var tbody = document.getElementById('downloads-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>暫無資料</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (item) {
+            return '<tr><td>' + item.id + '</td><td>' + escapeHtml(item.title) + '</td>' +
+              '<td>' + escapeHtml(item.category || '-') + '</td>' +
+              '<td>' + escapeHtml(item.file_name || '-') + '</td>' +
+              '<td>' + (item.members_only ? '<span class="tag tag-yellow">是</span>' : '<span class="tag tag-gray">否</span>') + '</td>' +
+              '<td>' +
+                '<button class="btn btn-sm btn-outline-teal" onclick="editDownload(' + item.id + ')">編輯</button> ' +
+                '<button class="btn btn-sm btn-danger" onclick="deleteItem(\'downloads\', ' + item.id + ')">刪除</button>' +
+              '</td></tr>';
+          }).join('');
+        }
+        renderPagination(document.getElementById('downloads-pagination'), { page: downloadsPage, totalPages: result.totalPages || 1, onChange: loadDownloads });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    function downloadFormHtml(item) {
+      var d = item || {};
+      return '<form id="content-form" enctype="multipart/form-data">' +
+        '<div class="form-group"><label class="form-label">標題</label><input type="text" class="form-control" name="title" value="' + escapeHtml(d.title || '') + '" required></div>' +
+        '<div class="form-group"><label class="form-label">分類</label><input type="text" class="form-control" name="category" value="' + escapeHtml(d.category || '') + '"></div>' +
+        '<div class="form-group"><label class="form-label">檔案上傳</label><input type="file" class="form-control" name="file" id="download-file"></div>' +
+        (d.file_name ? '<div class="form-help">目前檔案：' + escapeHtml(d.file_name) + '</div>' : '') +
+        '<div class="form-group"><label class="form-label"><input type="checkbox" name="members_only" value="1"' + (d.members_only ? ' checked' : '') + '> 僅限會員下載</label></div>' +
+        '<div class="modal-footer" style="padding:16px 0 0;border-top:1px solid var(--gray-200);">' +
+          '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+          '<button type="submit" class="btn btn-primary">儲存</button>' +
+        '</div></form>';
+    }
+
+    function addDownload() {
+      openModal('新增檔案', downloadFormHtml());
+      document.getElementById('content-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        try { await API.uploadFile('/admin/downloads', formData); showToast('新增成功'); closeModal(); loadDownloads(1); }
+        catch (err) { showToast(err.message || '新增失敗', 'error'); }
+      });
+    }
+
+    async function editDownload(id) {
+      try {
+        var result = await API.get('/admin/downloads/' + id);
+        var item = result.data || result;
+        openModal('編輯檔案 #' + id, downloadFormHtml(item));
+        document.getElementById('content-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          try {
+            var token = API.getToken();
+            var headers = {}; if (token) headers['Authorization'] = 'Bearer ' + token;
+            var resp = await fetch(API.baseURL + '/admin/downloads/' + id, { method: 'PUT', headers: headers, body: formData });
+            var data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || '更新失敗');
+            showToast('更新成功'); closeModal(); loadDownloads(downloadsPage);
+          } catch (err) { showToast(err.message || '更新失敗', 'error'); }
+        });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    // ===== COLUMNS =====
+    var columnsPage = 1;
+    async function loadColumns(page) {
+      columnsPage = page || 1;
+      try {
+        var result = await API.get('/admin/columns', { page: columnsPage, limit: 20 });
+        var items = result.data || [];
+        var tbody = document.getElementById('columns-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><p>暫無資料</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (item) {
+            return '<tr><td>' + item.id + '</td><td>' + escapeHtml(item.title) + '</td>' +
+              '<td>' + escapeHtml(item.author || '-') + '</td>' +
+              '<td>' + escapeHtml((item.content || '').substring(0, 50)) + '</td>' +
+              '<td>' + formatDate(item.created_at) + '</td>' +
+              '<td>' +
+                '<button class="btn btn-sm btn-outline-teal" onclick="editColumn(' + item.id + ')">編輯</button> ' +
+                '<button class="btn btn-sm btn-danger" onclick="deleteItem(\'columns\', ' + item.id + ')">刪除</button>' +
+              '</td></tr>';
+          }).join('');
+        }
+        renderPagination(document.getElementById('columns-pagination'), { page: columnsPage, totalPages: result.totalPages || 1, onChange: loadColumns });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    function columnFormHtml(item) {
+      var c = item || {};
+      return '<form id="content-form">' +
+        '<div class="form-group"><label class="form-label">標題</label><input type="text" class="form-control" name="title" value="' + escapeHtml(c.title || '') + '" required></div>' +
+        '<div class="form-group"><label class="form-label">作者</label><input type="text" class="form-control" name="author" value="' + escapeHtml(c.author || '') + '"></div>' +
+        '<div class="form-group"><label class="form-label">內容</label><textarea class="form-control" name="content" rows="8">' + escapeHtml(c.content || '') + '</textarea></div>' +
+        '<div class="modal-footer" style="padding:16px 0 0;border-top:1px solid var(--gray-200);">' +
+          '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+          '<button type="submit" class="btn btn-primary">儲存</button>' +
+        '</div></form>';
+    }
+
+    function addColumn() {
+      openModal('新增經驗分享', columnFormHtml());
+      document.getElementById('content-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+        try { await API.post('/admin/columns', body); showToast('新增成功'); closeModal(); loadColumns(1); }
+        catch (err) { showToast(err.message || '新增失敗', 'error'); }
+      });
+    }
+
+    async function editColumn(id) {
+      try {
+        var result = await API.get('/admin/columns/' + id);
+        var item = result.data || result;
+        openModal('編輯經驗分享 #' + id, columnFormHtml(item));
+        document.getElementById('content-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+          try { await API.put('/admin/columns/' + id, body); showToast('更新成功'); closeModal(); loadColumns(columnsPage); }
+          catch (err) { showToast(err.message || '更新失敗', 'error'); }
+        });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    // ===== COURSES =====
+    var coursesPage = 1;
+    async function loadCourses(page) {
+      coursesPage = page || 1;
+      try {
+        var result = await API.get('/admin/courses', { page: coursesPage, limit: 20 });
+        var items = result.data || [];
+        var tbody = document.getElementById('courses-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><p>暫無資料</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (item) {
+            return '<tr><td>' + item.id + '</td><td>' + escapeHtml(item.title) + '</td>' +
+              '<td>' + (COURSE_TYPES[item.type] || item.type || '-') + '</td>' +
+              '<td>' + formatDate(item.start_date) + (item.end_date ? ' ~ ' + formatDate(item.end_date) : '') + '</td>' +
+              '<td>' + escapeHtml(item.location || '-') + '</td>' +
+              '<td>' + formatMoney(item.fee || 0) + '</td>' +
+              '<td>' + (item.max_seats || '-') + '</td>' +
+              '<td>' +
+                '<button class="btn btn-sm btn-outline-teal" onclick="editCourse(' + item.id + ')">編輯</button> ' +
+                '<button class="btn btn-sm btn-danger" onclick="deleteItem(\'courses\', ' + item.id + ')">刪除</button>' +
+              '</td></tr>';
+          }).join('');
+        }
+        renderPagination(document.getElementById('courses-pagination'), { page: coursesPage, totalPages: result.totalPages || 1, onChange: loadCourses });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    function courseFormHtml(item) {
+      var c = item || {};
+      return '<form id="content-form">' +
+        '<div class="form-group"><label class="form-label">標題</label><input type="text" class="form-control" name="title" value="' + escapeHtml(c.title || '') + '" required></div>' +
+        '<div class="form-group"><label class="form-label">類型</label><select class="form-control" name="type">' +
+          Object.keys(COURSE_TYPES).map(function (k) {
+            return '<option value="' + k + '"' + (c.type === k ? ' selected' : '') + '>' + COURSE_TYPES[k] + '</option>';
+          }).join('') +
+        '</select></div>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">開始日期</label><input type="date" class="form-control" name="start_date" value="' + (c.start_date ? c.start_date.substring(0, 10) : '') + '"></div>' +
+          '<div class="form-group"><label class="form-label">結束日期</label><input type="date" class="form-control" name="end_date" value="' + (c.end_date ? c.end_date.substring(0, 10) : '') + '"></div>' +
+        '</div>' +
+        '<div class="form-group"><label class="form-label">地點</label><input type="text" class="form-control" name="location" value="' + escapeHtml(c.location || '') + '"></div>' +
+        '<div class="form-row">' +
+          '<div class="form-group"><label class="form-label">費用</label><input type="number" class="form-control" name="fee" value="' + (c.fee || '') + '"></div>' +
+          '<div class="form-group"><label class="form-label">名額上限</label><input type="number" class="form-control" name="max_seats" value="' + (c.max_seats || '') + '"></div>' +
+        '</div>' +
+        '<div class="modal-footer" style="padding:16px 0 0;border-top:1px solid var(--gray-200);">' +
+          '<button type="button" class="btn btn-outline-teal" onclick="closeModal()">取消</button>' +
+          '<button type="submit" class="btn btn-primary">儲存</button>' +
+        '</div></form>';
+    }
+
+    function addCourse() {
+      openModal('新增課程', courseFormHtml());
+      document.getElementById('content-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+        if (body.fee) body.fee = parseInt(body.fee);
+        if (body.max_seats) body.max_seats = parseInt(body.max_seats);
+        try { await API.post('/admin/courses', body); showToast('新增成功'); closeModal(); loadCourses(1); }
+        catch (err) { showToast(err.message || '新增失敗', 'error'); }
+      });
+    }
+
+    async function editCourse(id) {
+      try {
+        var result = await API.get('/admin/courses/' + id);
+        var item = result.data || result;
+        openModal('編輯課程 #' + id, courseFormHtml(item));
+        document.getElementById('content-form').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var fd = new FormData(this); var body = {}; fd.forEach(function (v, k) { body[k] = v; });
+          if (body.fee) body.fee = parseInt(body.fee);
+          if (body.max_seats) body.max_seats = parseInt(body.max_seats);
+          try { await API.put('/admin/courses/' + id, body); showToast('更新成功'); closeModal(); loadCourses(coursesPage); }
+          catch (err) { showToast(err.message || '更新失敗', 'error'); }
+        });
+      } catch (err) { showToast('載入失敗', 'error'); }
+    }
+
+    // ===== DELETE (shared) =====
+    async function deleteItem(type, id) {
+      var confirmed = await confirmAction('確定要刪除此項目嗎？此操作無法復原。');
+      if (!confirmed) return;
+      try {
+        await API.delete('/admin/' + type + '/' + id);
+        showToast('已刪除');
+        if (type === 'news') loadNews(newsPage);
+        else if (type === 'activities') loadActivities(activitiesPage);
+        else if (type === 'downloads') loadDownloads(downloadsPage);
+        else if (type === 'columns') loadColumns(columnsPage);
+        else if (type === 'courses') loadCourses(coursesPage);
+      } catch (err) {
+        showToast(err.message || '刪除失敗', 'error');
+      }
+    }
+
+    // Load all tabs on init
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!API.isAdmin()) return;
+      loadNews(1);
+      loadActivities(1);
+      loadDownloads(1);
+      loadColumns(1);
+      loadCourses(1);
+    });
+  </script>
+</body>
+</html>

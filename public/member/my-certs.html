@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的認證 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">會員中心</div>
+        <ul class="sidebar-menu">
+          <li><a href="/member/dashboard.html">Dashboard</a></li>
+          <li><a href="/member/profile.html">個人資料</a></li>
+          <li><a href="/member/my-courses.html">我的報名</a></li>
+          <li><a href="/member/my-certs.html" class="active">我的認證</a></li>
+          <li><a href="/member/payments.html">繳費紀錄</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>我的認證</h2>
+        <span class="page-header-en">My Certifications</span>
+      </div>
+
+      <div style="padding: 24px;">
+        <!-- Current Level -->
+        <div style="background: linear-gradient(135deg, var(--navy-dark), var(--navy)); border-radius: var(--radius); padding: 32px; margin-bottom: 32px; color: var(--white); text-align: center;">
+          <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 8px;">目前 CILT 認證等級</p>
+          <div id="current-level" style="font-size: 48px; font-weight: 900; color: var(--teal);">-</div>
+          <p id="current-level-name" style="color: rgba(255,255,255,0.8); font-size: 16px; margin-top: 8px;">載入中...</p>
+        </div>
+
+        <!-- Progress -->
+        <div class="section-title">
+          <h3>認證進度</h3>
+        </div>
+
+        <div id="cert-progress" style="display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;">
+          <div class="loading" style="width: 100%;"><div class="spinner"></div>載入中...</div>
+        </div>
+
+        <!-- Level Details -->
+        <div class="section-title">
+          <h3>各級認證說明</h3>
+        </div>
+
+        <div id="cert-details">
+          <div class="loading"><div class="spinner"></div>載入中...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    const LEVEL_INFO = [
+      { level: 1, name: '物流初級人員證書', en: 'Foundation Certificate', desc: '適合物流相關科系學生及初階從業人員，建立物流與供應鏈管理基礎知識。' },
+      { level: 2, name: '物流部門主管證書', en: 'Supervisory Managers', desc: '適合物流部門主管級人員，提升部門管理與營運效率能力。' },
+      { level: 3, name: '物流營運經理證書', en: 'Operational Managers', desc: '適合物流營運經理級人員，強化營運策略規劃與執行能力。' },
+      { level: 4, name: '物流高階經理證書', en: 'Strategic Managers', desc: '適合物流高階決策者，培養全球供應鏈策略思維與領導力。' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!requireLogin()) return;
+
+      loadCertifications();
+    });
+
+    async function loadCertifications() {
+      try {
+        const memberResult = await API.get('/auth/me');
+        const member = memberResult.member || memberResult;
+        const currentLevel = member.cilt_level || 0;
+
+        // Current level display
+        document.getElementById('current-level').textContent = currentLevel > 0 ? `Level ${currentLevel}` : '尚未取得';
+        document.getElementById('current-level-name').textContent = currentLevel > 0
+          ? LEVEL_INFO[currentLevel - 1].name
+          : '完成認證課程後即可取得認證';
+
+        // Progress visualization
+        const progressContainer = document.getElementById('cert-progress');
+        progressContainer.innerHTML = LEVEL_INFO.map(info => {
+          const isCompleted = currentLevel >= info.level;
+          const isCurrent = currentLevel === info.level;
+          return `
+            <div style="flex: 1; min-width: 200px; text-align: center;">
+              <div style="
+                width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 24px; font-weight: 900;
+                ${isCompleted
+                  ? 'background: var(--teal); color: var(--navy-dark);'
+                  : 'background: var(--gray-100); color: var(--text-light); border: 2px dashed var(--gray-300);'}
+              ">${info.level}</div>
+              <p style="font-size: 14px; font-weight: 600; color: ${isCompleted ? 'var(--teal)' : 'var(--text-light)'};">
+                Level ${info.level}
+              </p>
+              <p style="font-size: 12px; color: var(--text-light);">${info.en}</p>
+              ${isCurrent ? '<span class="tag tag-teal" style="margin-top: 8px;">目前等級</span>' : ''}
+              ${isCompleted && !isCurrent ? '<span class="tag tag-green" style="margin-top: 8px;">已完成</span>' : ''}
+            </div>
+          `;
+        }).join('');
+
+        // Load cert details from API if available
+        let certDetails = [];
+        try {
+          const certResult = await API.get('/members/my-certs');
+          certDetails = certResult.data || certResult || [];
+        } catch (e) {
+          // API might not exist yet, use defaults
+        }
+
+        // Level details
+        const detailsContainer = document.getElementById('cert-details');
+        detailsContainer.innerHTML = LEVEL_INFO.map(info => {
+          const isCompleted = currentLevel >= info.level;
+          const certDetail = certDetails.find(c => c.level === info.level);
+          return `
+            <div class="card cert-card" style="margin-bottom: 16px; ${isCompleted ? 'border-left-color: var(--teal);' : 'border-left-color: var(--gray-300);'}">
+              ${isCompleted ? `<div class="level-badge">已取得</div>` : ''}
+              <div style="display: flex; align-items: flex-start; gap: 16px;">
+                <div style="
+                  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+                  display: flex; align-items: center; justify-content: center;
+                  font-size: 20px; font-weight: 900;
+                  ${isCompleted
+                    ? 'background: var(--teal); color: var(--navy-dark);'
+                    : 'background: var(--gray-100); color: var(--text-light);'}
+                ">${info.level}</div>
+                <div>
+                  <h3 style="font-size: 16px; margin-bottom: 4px;">${info.name}</h3>
+                  <p style="font-size: 13px; color: var(--text-light); margin-bottom: 8px;">${info.en}</p>
+                  <p style="font-size: 14px;">${info.desc}</p>
+                  ${certDetail && certDetail.certified_at ? `<p style="font-size: 13px; color: var(--teal); margin-top: 8px;">取得日期: ${formatDate(certDetail.certified_at)}</p>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        document.getElementById('cert-progress').innerHTML = '<div class="empty-state" style="width:100%;"><p>載入失敗</p></div>';
+        document.getElementById('cert-details').innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>

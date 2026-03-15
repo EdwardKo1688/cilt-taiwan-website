@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>認證專區 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 國際物流認證四級制度：Level 1 初級證書、Level 2 部門主管證書、Level 3 營運經理證書、Level 4 高階經理證書。">
+  <meta property="og:title" content="認證專區 - CILT 台灣分會">
+  <meta property="og:description" content="CILT 國際物流認證四級制度，從基礎到高階，系統化提升物流專業能力。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="roc-date-box"><span class="roc-date"></span></div>
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">認證專區</div>
+        <ul class="sidebar-menu">
+          <li><a href="#" onclick="switchCertTab('org'); return false;" class="active" id="cert-tab-org">CILT機構簡介</a></li>
+          <li><a href="#" onclick="switchCertTab('levels'); return false;" id="cert-tab-levels">認證分級</a></li>
+          <li><a href="#" onclick="switchCertTab('compare'); return false;" id="cert-tab-compare">認證系統比較</a></li>
+          <li><a href="#" onclick="switchCertTab('target'); return false;" id="cert-tab-target">適合參加對象</a></li>
+          <li><a href="#" onclick="switchCertTab('curriculum'); return false;" id="cert-tab-curriculum">課程介紹</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-member-box">
+        <div class="box-title">會員登入</div>
+        <div class="login-form">
+          <input type="text" placeholder="帳號">
+          <input type="password" placeholder="密碼">
+          <button class="btn btn-primary btn-sm btn-block" onclick="window.location.href='/login.html'">登入</button>
+          <div class="login-links">
+            <a href="/signup.html">加入會員</a>
+            <a href="#">忘記密碼</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>認證專區</h2>
+        <span class="page-header-en">Certification</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>認證專區</span>
+      </div>
+
+      <!-- Tab: CILT機構簡介 -->
+      <div id="cert-content-org" class="cert-tab-content">
+        <div class="section-title"><h3>CILT機構簡介</h3></div>
+        <div class="card" style="margin-bottom: 24px;">
+          <p style="margin-bottom: 16px;">
+            CILT (The Chartered Institute of Logistics and Transport) 是由原物流學會 (Institute of Logistics) 與運輸學會 (Chartered Institute of Transport) 於 <strong>1999 年</strong>合併而成的國際專業組織。
+          </p>
+          <p style="margin-bottom: 16px;">
+            合併後的學會由英國女王伊麗莎白二世 (Queen Elizabeth II) 簽署皇家特許狀 (Royal Charter)，確立其在全球物流與運輸領域的最高權威地位。
+          </p>
+          <p>
+            CILT 的專業認證體系在全球超過 30 個國家獲得承認，是物流與運輸從業人員最重要的國際專業認證之一。
+          </p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card" style="text-align: center; padding: 24px;">
+            <div style="font-size: 36px; font-weight: 900; color: var(--teal);">1919</div>
+            <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">創立年份</div>
+          </div>
+          <div class="card" style="text-align: center; padding: 24px;">
+            <div style="font-size: 36px; font-weight: 900; color: var(--teal);">1926</div>
+            <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">獲頒皇家特許狀</div>
+          </div>
+          <div class="card" style="text-align: center; padding: 24px;">
+            <div style="font-size: 36px; font-weight: 900; color: var(--teal);">1999</div>
+            <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">兩大學會合併</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: 認證分級 -->
+      <div id="cert-content-levels" class="cert-tab-content hidden">
+        <div class="section-title"><h3>認證分級</h3></div>
+        <p style="margin-bottom: 24px;">CILT 國際認證共分為四個等級，涵蓋從初階到高階的完整專業認證體系：</p>
+
+        <div id="cert-levels-container">
+          <div class="card cert-card" style="margin-bottom: 20px;">
+            <div class="level-badge">Level 1</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">物流初級人員證書</h3>
+            <p style="font-size: 14px; color: var(--teal); margin-bottom: 12px;">Foundation Certificate in Logistics & Transport</p>
+            <div style="font-size: 14px;">
+              <p style="margin-bottom: 8px;"><strong>適合對象：</strong>物流相關科系學生、初入物流運輸產業的從業人員</p>
+              <p style="margin-bottom: 8px;"><strong>報考資格：</strong>不限學歷與工作經驗</p>
+              <p><strong>認證效益：</strong>建立物流與運輸的基礎專業知識，取得國際認可的入門級專業資格</p>
+            </div>
+          </div>
+
+          <div class="card cert-card" style="margin-bottom: 20px;">
+            <div class="level-badge">Level 2</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">物流部門主管證書</h3>
+            <p style="font-size: 14px; color: var(--teal); margin-bottom: 12px;">Certificate for Supervisory Managers in Logistics & Transport</p>
+            <div style="font-size: 14px;">
+              <p style="margin-bottom: 8px;"><strong>適合對象：</strong>物流部門主管、基層管理人員</p>
+              <p style="margin-bottom: 8px;"><strong>報考資格：</strong>具備 Level 1 認證或相當工作經驗</p>
+              <p><strong>認證效益：</strong>提升部門管理能力，具備督導物流作業的專業資格</p>
+            </div>
+          </div>
+
+          <div class="card cert-card" style="margin-bottom: 20px;">
+            <div class="level-badge">Level 3</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">物流營運經理證書</h3>
+            <p style="font-size: 14px; color: var(--teal); margin-bottom: 12px;">Advanced Certificate for Operational Managers in Logistics & Transport</p>
+            <div style="font-size: 14px;">
+              <p style="margin-bottom: 8px;"><strong>適合對象：</strong>物流營運經理、中階管理人員</p>
+              <p style="margin-bottom: 8px;"><strong>報考資格：</strong>具備 Level 2 認證或相關管理經驗</p>
+              <p><strong>認證效益：</strong>掌握物流營運策略規劃能力，勝任營運管理角色</p>
+            </div>
+          </div>
+
+          <div class="card cert-card" style="margin-bottom: 20px;">
+            <div class="level-badge">Level 4</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">物流高階經理證書</h3>
+            <p style="font-size: 14px; color: var(--teal); margin-bottom: 12px;">Diploma for Strategic Managers in Logistics & Transport</p>
+            <div style="font-size: 14px;">
+              <p style="margin-bottom: 8px;"><strong>適合對象：</strong>物流高階主管、企業決策者</p>
+              <p style="margin-bottom: 8px;"><strong>報考資格：</strong>具備 Level 3 認證或豐富的高階管理經驗</p>
+              <p><strong>認證效益：</strong>具備策略性物流管理思維，引領企業物流發展方向</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: 認證系統比較 -->
+      <div id="cert-content-compare" class="cert-tab-content hidden">
+        <div class="section-title"><h3>認證系統比較</h3></div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>比較項目</th>
+                <th>Level 1</th>
+                <th>Level 2</th>
+                <th>Level 3</th>
+                <th>Level 4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 600;">證書名稱</td>
+                <td>物流初級人員證書</td>
+                <td>物流部門主管證書</td>
+                <td>物流營運經理證書</td>
+                <td>物流高階經理證書</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600;">英文名稱</td>
+                <td>Foundation Certificate</td>
+                <td>Supervisory Managers</td>
+                <td>Operational Managers</td>
+                <td>Strategic Managers</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600;">適合對象</td>
+                <td>學生/初階人員</td>
+                <td>部門主管</td>
+                <td>營運經理</td>
+                <td>高階主管</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600;">工作經驗</td>
+                <td>不限</td>
+                <td>2 年以上</td>
+                <td>5 年以上</td>
+                <td>8 年以上</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600;">考試科目</td>
+                <td>2 科</td>
+                <td>3 科</td>
+                <td>4 科</td>
+                <td>4 科 + 論文</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 600;">國際認可</td>
+                <td>30+ 國家</td>
+                <td>30+ 國家</td>
+                <td>30+ 國家</td>
+                <td>30+ 國家</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: 適合參加對象 -->
+      <div id="cert-content-target" class="cert-tab-content hidden">
+        <div class="section-title"><h3>適合參加對象</h3></div>
+
+        <div class="card" style="margin-bottom: 20px; border-left: 4px solid var(--teal);">
+          <h4 style="color: var(--teal); margin-bottom: 12px;">Level 1 - 物流初級人員證書</h4>
+          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+            <li>物流、運輸、供應鏈管理等相關科系在學學生</li>
+            <li>剛進入物流運輸產業的社會新鮮人</li>
+            <li>希望轉職至物流領域的其他產業從業人員</li>
+            <li>對物流專業認證有興趣的一般社會大眾</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px; border-left: 4px solid var(--info);">
+          <h4 style="color: var(--info); margin-bottom: 12px;">Level 2 - 物流部門主管證書</h4>
+          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+            <li>物流倉儲部門基層主管</li>
+            <li>運輸車隊管理人員</li>
+            <li>物流作業督導人員</li>
+            <li>具 2 年以上物流相關工作經驗者</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px; border-left: 4px solid var(--warning);">
+          <h4 style="color: var(--warning); margin-bottom: 12px;">Level 3 - 物流營運經理證書</h4>
+          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+            <li>物流中心營運經理</li>
+            <li>供應鏈管理部門經理</li>
+            <li>運輸公司營運主管</li>
+            <li>具 5 年以上物流管理經驗者</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px; border-left: 4px solid var(--danger);">
+          <h4 style="color: var(--danger); margin-bottom: 12px;">Level 4 - 物流高階經理證書</h4>
+          <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+            <li>物流企業高階主管 (VP / Director)</li>
+            <li>供應鏈策略規劃負責人</li>
+            <li>物流顧問公司合夥人或資深顧問</li>
+            <li>具 8 年以上物流高階管理經驗者</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab: 課程介紹 -->
+      <div id="cert-content-curriculum" class="cert-tab-content hidden">
+        <div class="section-title"><h3>課程介紹</h3></div>
+        <p style="margin-bottom: 24px;">CILT 認證課程涵蓋物流與運輸管理的核心知識領域，以下為各級別課程主要內容：</p>
+
+        <div id="cert-curriculum-container">
+          <div class="card" style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 16px; color: var(--teal);">Level 1 課程內容</h4>
+            <div class="grid grid-2">
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">核心科目</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>物流管理概論</li>
+                  <li>運輸管理基礎</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">學習重點</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>物流系統基本架構</li>
+                  <li>倉儲管理基礎知識</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 16px; color: var(--teal);">Level 2 課程內容</h4>
+            <div class="grid grid-2">
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">核心科目</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>物流作業管理</li>
+                  <li>供應鏈管理基礎</li>
+                  <li>倉儲與配送管理</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">學習重點</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>部門人員管理技巧</li>
+                  <li>品質管理與績效指標</li>
+                  <li>物流成本控制</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 16px; color: var(--teal);">Level 3 課程內容</h4>
+            <div class="grid grid-2">
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">核心科目</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>策略性物流管理</li>
+                  <li>國際物流與貿易</li>
+                  <li>物流資訊系統</li>
+                  <li>營運管理與優化</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">學習重點</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>供應鏈策略規劃</li>
+                  <li>物流網路設計</li>
+                  <li>數據分析與決策</li>
+                  <li>跨部門協作管理</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 20px;">
+            <h4 style="margin-bottom: 16px; color: var(--teal);">Level 4 課程內容</h4>
+            <div class="grid grid-2">
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">核心科目</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>全球供應鏈策略</li>
+                  <li>企業物流領導力</li>
+                  <li>創新與數位轉型</li>
+                  <li>永續物流管理</li>
+                </ul>
+              </div>
+              <div>
+                <p style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">學習重點</p>
+                <ul style="padding-left: 20px; font-size: 14px; line-height: 2;">
+                  <li>高階策略思維</li>
+                  <li>變革管理</li>
+                  <li>風險管理與危機處理</li>
+                  <li>論文撰寫與發表</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    function switchCertTab(tab) {
+      document.querySelectorAll('.cert-tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      document.getElementById('cert-content-' + tab).classList.remove('hidden');
+      document.getElementById('cert-tab-' + tab).classList.add('active');
+    }
+
+    // Load certification data from API
+    async function loadCertifications() {
+      try {
+        const result = await API.get('/certifications');
+        // If API returns data, could dynamically render cert levels and curriculum
+        // For now, static content is displayed as fallback
+      } catch (err) {
+        // Static content already displayed as fallback
+      }
+    }
+
+    loadCertifications();
+  </script>
+</body>
+</html>

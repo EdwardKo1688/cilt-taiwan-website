@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cilt-taiwan-website
+    runtime: node
+    buildCommand: npm install --ignore-scripts
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DB_PATH
+        value: /data/database.sqlite
+      - key: JWT_SECRET
+        generateValue: true
+    disk:
+      name: cilt-data
+      mountPath: /data
+      sizeGB: 1

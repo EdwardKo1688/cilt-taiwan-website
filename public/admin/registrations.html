@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>報名管理 - CILT 管理後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/members.html">會員管理</a>
+      <a href="/admin/content.html">內容管理</a>
+      <a href="/admin/registrations.html">報名管理</a>
+      <a href="/admin/payments.html">繳費管理</a>
+    </aside>
+    <div class="admin-main">
+      <div class="flex-between mb-3">
+        <h2>報名管理</h2>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">報名狀態</label>
+          <select class="form-control" id="filter-status">
+            <option value="">全部</option>
+            <option value="pending">待確認</option>
+            <option value="confirmed">已確認</option>
+            <option value="cancelled">已取消</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">繳費狀態</label>
+          <select class="form-control" id="filter-payment">
+            <option value="">全部</option>
+            <option value="unpaid">未繳費</option>
+            <option value="paid">已繳費</option>
+            <option value="refunded">已退費</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">課程</label>
+          <select class="form-control" id="filter-course">
+            <option value="">全部課程</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" onclick="loadRegistrations(1)">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>會員</th>
+              <th>課程</th>
+              <th>報名狀態</th>
+              <th>繳費狀態</th>
+              <th>報名日期</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="registrations-tbody">
+            <tr><td colspan="7" class="loading"><div class="spinner"></div>載入中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="registrations-pagination" class="mt-3"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    var currentPage = 1;
+
+    async function loadCourseFilter() {
+      try {
+        var result = await API.get('/admin/courses', { limit: 100 });
+        var courses = result.data || [];
+        var select = document.getElementById('filter-course');
+        courses.forEach(function (c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.title;
+          select.appendChild(opt);
+        });
+      } catch (err) { /* ignore */ }
+    }
+
+    async function loadRegistrations(page) {
+      currentPage = page || 1;
+      var params = { page: currentPage, limit: 20 };
+      var status = document.getElementById('filter-status').value;
+      var payment = document.getElementById('filter-payment').value;
+      var course = document.getElementById('filter-course').value;
+      if (status) params.status = status;
+      if (payment) params.payment_status = payment;
+      if (course) params.course_id = course;
+
+      try {
+        var result = await API.get('/admin/registrations', params);
+        var items = result.data || [];
+        var tbody = document.getElementById('registrations-tbody');
+
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><p>無符合條件的報名紀錄</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (r) {
+            var actions = '';
+            if (r.status === 'pending') {
+              actions += '<button class="btn btn-sm btn-primary" onclick="updateRegistration(' + r.id + ', \'confirmed\')">確認</button> ';
+              actions += '<button class="btn btn-sm btn-danger" onclick="updateRegistration(' + r.id + ', \'cancelled\')">取消</button> ';
+            }
+            if (r.payment_status === 'unpaid') {
+              actions += '<button class="btn btn-sm btn-outline-teal" onclick="markPaid(' + r.id + ')">標記已繳費</button>';
+            }
+            if (!actions) actions = '-';
+
+            return '<tr>' +
+              '<td>' + r.id + '</td>' +
+              '<td>' + escapeHtml(r.member_name || r.member_email || '-') + '</td>' +
+              '<td>' + escapeHtml(r.course_title || '-') + '</td>' +
+              '<td>' + statusTag(r.status, REG_STATUS_LABELS) + '</td>' +
+              '<td>' + statusTag(r.payment_status, PAY_STATUS_LABELS) + '</td>' +
+              '<td>' + formatDate(r.created_at) + '</td>' +
+              '<td>' + actions + '</td>' +
+              '</tr>';
+          }).join('');
+        }
+
+        renderPagination(document.getElementById('registrations-pagination'), {
+          page: currentPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadRegistrations
+        });
+      } catch (err) {
+        showToast('載入報名資料失敗', 'error');
+      }
+    }
+
+    async function updateRegistration(id, status) {
+      var msg = status === 'confirmed' ? '確定要確認此報名？' : '確定要取消此報名？';
+      var confirmed = await confirmAction(msg);
+      if (!confirmed) return;
+      try {
+        await API.put('/admin/registrations/' + id, { status: status });
+        showToast('已更新');
+        loadRegistrations(currentPage);
+      } catch (err) {
+        showToast(err.message || '更新失敗', 'error');
+      }
+    }
+
+    async function markPaid(id) {
+      var confirmed = await confirmAction('確定要標記此報名為已繳費？');
+      if (!confirmed) return;
+      try {
+        await API.put('/admin/registrations/' + id, { payment_status: 'paid' });
+        showToast('已標記為已繳費');
+        loadRegistrations(currentPage);
+      } catch (err) {
+        showToast(err.message || '更新失敗', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!API.isAdmin()) return;
+      loadCourseFilter();
+      loadRegistrations(1);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>下載專區 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 台灣分會下載專區：認證申請表、課程簡章、考試資料、會員通訊等文件下載。">
+  <meta property="og:title" content="下載專區 - CILT 台灣分會">
+  <meta property="og:description" content="認證申請表、課程簡章、考試資料等文件下載。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="main-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>下載專區</h2>
+        <span class="page-header-en">Downloads</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>下載專區</span>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">類別</label>
+          <select class="form-control" id="dl-category">
+            <option value="">全部類別</option>
+            <option value="exam_info">考試相關</option>
+            <option value="registration">報名表格</option>
+            <option value="syllabus">課程大綱</option>
+            <option value="certificate">證書相關</option>
+            <option value="regulation">法規辦法</option>
+            <option value="form">申請表單</option>
+            <option value="reference">參考資料</option>
+            <option value="newsletter">電子報</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">關鍵字搜尋</label>
+          <input type="text" class="form-control" id="dl-keyword" placeholder="輸入檔案名稱...">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" onclick="searchDownloads()">搜尋</button>
+        </div>
+      </div>
+
+      <!-- File List -->
+      <div id="download-list">
+        <div class="loading"><div class="spinner"></div>載入中...</div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="download-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    const DL_CATEGORIES = {
+      exam_info: '考試相關',
+      registration: '報名表格',
+      syllabus: '課程大綱',
+      certificate: '證書相關',
+      regulation: '法規辦法',
+      form: '申請表單',
+      reference: '參考資料',
+      newsletter: '電子報',
+      other: '其他'
+    };
+
+    let dlPage = 1;
+
+    async function loadDownloads(page) {
+      dlPage = page || 1;
+      const params = { page: dlPage, limit: 15 };
+      const category = document.getElementById('dl-category').value;
+      const keyword = document.getElementById('dl-keyword').value.trim();
+      if (category) params.category = category;
+      if (keyword) params.keyword = keyword;
+
+      const container = document.getElementById('download-list');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
+
+      try {
+        const result = await API.get('/downloads', params);
+        if (!result.data || result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>暫無可下載檔案</p></div>';
+          document.getElementById('download-pagination').innerHTML = '';
+          return;
+        }
+
+        let html = '<div class="table-wrapper"><table>';
+        html += '<thead><tr><th style="width: 40%;">檔案名稱</th><th>類別</th><th>檔案大小</th><th>下載次數</th><th style="text-align: center;">下載</th></tr></thead>';
+        html += '<tbody>';
+
+        result.data.forEach(item => {
+          const isLocked = item.members_only && !API.isLoggedIn();
+          html += '<tr>';
+          html += `<td>
+            ${isLocked ? '<span style="color: var(--warning); margin-right: 6px;" title="會員專屬">&#128274;</span>' : ''}
+            <span style="font-weight: 500;">${escapeHtml(item.title)}</span>
+          </td>`;
+          html += `<td><span class="tag tag-teal">${DL_CATEGORIES[item.category] || item.category}</span></td>`;
+          html += `<td style="color: var(--text-light);">${formatFileSize(item.file_size)}</td>`;
+          html += `<td style="color: var(--text-light);">${item.download_count || 0}</td>`;
+          html += '<td style="text-align: center;">';
+          if (isLocked) {
+            html += `<button class="btn btn-sm btn-outline-teal" onclick="requireLogin()" title="需登入會員">登入下載</button>`;
+          } else {
+            html += `<a href="${item.file_url || '#'}" class="btn btn-sm btn-primary" target="_blank" onclick="trackDownload(${item.id})">下載</a>`;
+          }
+          html += '</td></tr>';
+        });
+
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+
+        renderPagination(document.getElementById('download-pagination'), {
+          page: dlPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadDownloads
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state"><p>載入失敗，請稍後再試</p></div>';
+      }
+    }
+
+    function searchDownloads() {
+      loadDownloads(1);
+    }
+
+    function trackDownload(id) {
+      // Silently track download count
+      API.post('/downloads/' + id + '/track').catch(() => {});
+    }
+
+    document.getElementById('dl-keyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchDownloads();
+    });
+
+    loadDownloads(1);
+  </script>
+</body>
+</html>

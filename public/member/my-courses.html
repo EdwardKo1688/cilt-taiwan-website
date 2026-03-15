@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的報名 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-section open">
+        <div class="sidebar-title" onclick="toggleSidebarMenu(this)">會員中心</div>
+        <ul class="sidebar-menu">
+          <li><a href="/member/dashboard.html">Dashboard</a></li>
+          <li><a href="/member/profile.html">個人資料</a></li>
+          <li><a href="/member/my-courses.html" class="active">我的報名</a></li>
+          <li><a href="/member/my-certs.html">我的認證</a></li>
+          <li><a href="/member/payments.html">繳費紀錄</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>我的報名</h2>
+        <span class="page-header-en">My Registrations</span>
+      </div>
+
+      <div style="padding: 24px;">
+        <div id="registrations-list">
+          <div class="loading"><div class="spinner"></div>載入中...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    const STATUS_MAP = {
+      pending: '待繳費',
+      paid: '已繳費',
+      confirmed: '已確認',
+      cancelled: '已取消'
+    };
+    const STATUS_TAG = {
+      pending: 'tag-yellow',
+      paid: 'tag-blue',
+      confirmed: 'tag-green',
+      cancelled: 'tag-red'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!requireLogin()) return;
+
+      loadRegistrations();
+    });
+
+    async function loadRegistrations() {
+      const container = document.getElementById('registrations-list');
+      try {
+        const result = await API.get('/registrations/my');
+        const registrations = result.data || result || [];
+
+        if (registrations.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>尚無報名紀錄</p><p style="margin-top:8px;"><a href="/register.html" class="btn btn-outline-teal btn-sm">前往報名</a></p></div>';
+          return;
+        }
+
+        container.innerHTML = registrations.map(reg => `
+          <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+              <div style="flex: 1; min-width: 200px;">
+                <h3 class="card-title" style="font-size: 16px;">${escapeHtml(reg.activity_title || reg.course_title || '課程報名')}</h3>
+                <p style="font-size: 13px; color: var(--text-light); margin-top: 4px;">
+                  報名日期: ${formatDate(reg.created_at)}
+                  ${reg.amount ? ' | 費用: ' + formatMoney(reg.amount) : ''}
+                </p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="tag ${STATUS_TAG[reg.payment_status] || 'tag-gray'}">${STATUS_MAP[reg.payment_status] || reg.payment_status}</span>
+                ${reg.payment_status === 'pending' ? `
+                  <a href="/register.html?pay=${reg.id}" class="btn btn-primary btn-sm">繳費</a>
+                  <button class="btn btn-danger btn-sm" onclick="cancelRegistration('${reg.id}')">取消</button>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state"><p>載入失敗，請重新整理頁面</p></div>';
+      }
+    }
+
+    async function cancelRegistration(id) {
+      if (!confirm('確定要取消此報名嗎？')) return;
+
+      try {
+        await API.delete(`/registrations/${id}`);
+        showToast('已取消報名');
+        loadRegistrations();
+      } catch (err) {
+        showToast(err.message || '取消失敗', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

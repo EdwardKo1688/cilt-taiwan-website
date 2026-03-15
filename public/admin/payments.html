@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>繳費管理 - CILT 管理後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/members.html">會員管理</a>
+      <a href="/admin/content.html">內容管理</a>
+      <a href="/admin/registrations.html">報名管理</a>
+      <a href="/admin/payments.html">繳費管理</a>
+    </aside>
+    <div class="admin-main">
+      <div class="flex-between mb-3">
+        <h2>繳費管理</h2>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">繳費狀態</label>
+          <select class="form-control" id="filter-status">
+            <option value="">全部</option>
+            <option value="paid">已繳費</option>
+            <option value="unpaid">未繳費</option>
+            <option value="refunded">已退費</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">起始日期</label>
+          <input type="date" class="form-control" id="filter-date-from">
+        </div>
+        <div class="form-group">
+          <label class="form-label">結束日期</label>
+          <input type="date" class="form-control" id="filter-date-to">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" onclick="loadPayments(1)">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="dashboard-stats mb-3" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="stat-card">
+          <div class="stat-label">總金額</div>
+          <div class="stat-value" id="summary-total">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">已繳費筆數</div>
+          <div class="stat-value" id="summary-paid-count">-</div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>會員</th>
+              <th>課程</th>
+              <th>金額</th>
+              <th>付款方式</th>
+              <th>狀態</th>
+              <th>交易編號</th>
+              <th>日期</th>
+            </tr>
+          </thead>
+          <tbody id="payments-tbody">
+            <tr><td colspan="8" class="loading"><div class="spinner"></div>載入中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="payments-pagination" class="mt-3"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    var currentPage = 1;
+
+    var PAYMENT_METHODS = {
+      transfer: '銀行轉帳',
+      credit_card: '信用卡',
+      cash: '現金',
+      other: '其他'
+    };
+
+    async function loadPayments(page) {
+      currentPage = page || 1;
+      var params = { page: currentPage, limit: 20 };
+      var status = document.getElementById('filter-status').value;
+      var dateFrom = document.getElementById('filter-date-from').value;
+      var dateTo = document.getElementById('filter-date-to').value;
+      if (status) params.status = status;
+      if (dateFrom) params.date_from = dateFrom;
+      if (dateTo) params.date_to = dateTo;
+
+      try {
+        var result = await API.get('/admin/payments', params);
+        var items = result.data || [];
+        var summary = result.summary || {};
+
+        document.getElementById('summary-total').textContent = formatMoney(summary.total_amount || 0);
+        document.getElementById('summary-paid-count').textContent = (summary.paid_count || 0).toLocaleString();
+
+        var tbody = document.getElementById('payments-tbody');
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="empty-state"><p>無符合條件的繳費紀錄</p></td></tr>';
+        } else {
+          tbody.innerHTML = items.map(function (p) {
+            return '<tr>' +
+              '<td>' + p.id + '</td>' +
+              '<td>' + escapeHtml(p.member_name || p.member_email || '-') + '</td>' +
+              '<td>' + escapeHtml(p.course_title || '-') + '</td>' +
+              '<td>' + formatMoney(p.amount || 0) + '</td>' +
+              '<td>' + (PAYMENT_METHODS[p.method] || p.method || '-') + '</td>' +
+              '<td>' + statusTag(p.status, PAY_STATUS_LABELS) + '</td>' +
+              '<td>' + escapeHtml(p.transaction_id || '-') + '</td>' +
+              '<td>' + formatDate(p.created_at) + '</td>' +
+              '</tr>';
+          }).join('');
+        }
+
+        renderPagination(document.getElementById('payments-pagination'), {
+          page: currentPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadPayments
+        });
+      } catch (err) {
+        showToast('載入繳費資料失敗', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (API.isAdmin()) loadPayments(1);
+    });
+  </script>
+</body>
+</html>

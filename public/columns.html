@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>經驗分享 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 台灣分會經驗分享專欄：企業學員與學生會員的認證學習心得與職涯發展故事。">
+  <meta property="og:title" content="經驗分享 - CILT 台灣分會">
+  <meta property="og:description" content="企業學員與學生的認證學習心得與職涯發展故事。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="main-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>經驗分享</h2>
+        <span class="page-header-en">Columns & Sharing</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>經驗分享</span>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">類別</label>
+          <select class="form-control" id="col-category">
+            <option value="">全部</option>
+            <option value="enterprise">企業</option>
+            <option value="student">學生</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">關鍵字</label>
+          <input type="text" class="form-control" id="col-keyword" placeholder="搜尋文章...">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" onclick="searchColumns()">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div id="columns-list">
+        <div class="loading"><div class="spinner"></div>載入中...</div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="columns-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    const COL_CATEGORIES = { enterprise: '企業', student: '學生' };
+    let colPage = 1;
+
+    async function loadColumns(page) {
+      colPage = page || 1;
+      const params = { page: colPage, limit: 9 };
+      const category = document.getElementById('col-category').value;
+      const keyword = document.getElementById('col-keyword').value.trim();
+      if (category) params.category = category;
+      if (keyword) params.keyword = keyword;
+
+      const container = document.getElementById('columns-list');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
+
+      try {
+        const result = await API.get('/columns', params);
+        if (!result.data || result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>暫無經驗分享文章</p></div>';
+          document.getElementById('columns-pagination').innerHTML = '';
+          return;
+        }
+
+        container.innerHTML = '<div class="grid grid-3">' + result.data.map(item => `
+          <div class="card" id="column-card-${item.id}">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="tag ${item.category === 'enterprise' ? 'tag-blue' : 'tag-green'}">${COL_CATEGORIES[item.category] || item.category}</span>
+              ${item.cilt_level ? `<span class="tag tag-teal">${CILT_LEVELS[item.cilt_level] || ''}</span>` : ''}
+            </div>
+            <h3 class="card-title" style="font-size: 16px; margin-bottom: 8px;">${escapeHtml(item.title)}</h3>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 14px; font-weight: 600; color: var(--text-dark);">${escapeHtml(item.author_name || '')}</span>
+              ${item.author_company ? `<span style="font-size: 12px; color: var(--text-light);">| ${escapeHtml(item.author_company)}</span>` : ''}
+            </div>
+            ${item.year ? `<div style="font-size: 12px; color: var(--text-light); margin-bottom: 8px;">認證年份：${item.year}</div>` : ''}
+            <p class="card-body" style="font-size: 14px; color: var(--text-light); min-height: 60px;">
+              ${escapeHtml((item.summary || item.content || '').substring(0, 120))}${(item.summary || item.content || '').length > 120 ? '...' : ''}
+            </p>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-outline-teal" onclick="toggleColumnContent(${item.id})">
+                <span id="column-btn-text-${item.id}">展開全文</span>
+              </button>
+            </div>
+            <div id="column-full-${item.id}" class="hidden" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-100); font-size: 14px; line-height: 1.8;">
+            </div>
+          </div>
+        `).join('') + '</div>';
+
+        // Store data for expand
+        window._columnsData = {};
+        result.data.forEach(item => { window._columnsData[item.id] = item; });
+
+        renderPagination(document.getElementById('columns-pagination'), {
+          page: colPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadColumns
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state"><p>載入失敗，請稍後再試</p></div>';
+      }
+    }
+
+    function toggleColumnContent(id) {
+      const fullEl = document.getElementById('column-full-' + id);
+      const btnText = document.getElementById('column-btn-text-' + id);
+
+      if (fullEl.classList.contains('hidden')) {
+        const item = window._columnsData[id];
+        fullEl.innerHTML = item.content || item.summary || '';
+        fullEl.classList.remove('hidden');
+        btnText.textContent = '收合';
+      } else {
+        fullEl.classList.add('hidden');
+        btnText.textContent = '展開全文';
+      }
+    }
+
+    function searchColumns() {
+      loadColumns(1);
+    }
+
+    document.getElementById('col-keyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchColumns();
+    });
+
+    loadColumns(1);
+  </script>
+</body>
+</html>

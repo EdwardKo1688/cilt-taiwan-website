@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理後台 - CILT 台灣分會</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/members.html">會員管理</a>
+      <a href="/admin/content.html">內容管理</a>
+      <a href="/admin/registrations.html">報名管理</a>
+      <a href="/admin/payments.html">繳費管理</a>
+    </aside>
+    <div class="admin-main">
+      <div class="flex-between mb-3">
+        <h2>Dashboard</h2>
+        <span style="color: var(--text-light); font-size: 13px;" id="dashboard-date"></span>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="dashboard-stats" id="stats-container">
+        <div class="stat-card">
+          <div class="stat-label">會員總數</div>
+          <div class="stat-value" id="stat-members">-</div>
+          <div class="stat-sub" id="stat-members-month">本月新增 -</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">報名總數</div>
+          <div class="stat-value" id="stat-registrations">-</div>
+          <div class="stat-sub" id="stat-registrations-month">本月 -</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">營收</div>
+          <div class="stat-value" id="stat-revenue">-</div>
+          <div class="stat-sub" id="stat-revenue-month">本月 -</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">待處理</div>
+          <div class="stat-value" id="stat-pending">-</div>
+          <div class="stat-sub" id="stat-pending-detail">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 24px;">
+        <div class="card" style="padding: 20px;">
+          <h3 style="margin-bottom: 16px; font-size: 15px;">報名趨勢（近6個月）</h3>
+          <canvas id="trend-chart" height="200"></canvas>
+        </div>
+        <div class="card" style="padding: 20px;">
+          <h3 style="margin-bottom: 16px; font-size: 15px;">會員認證分布</h3>
+          <canvas id="level-chart" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Activity Row -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <!-- Recent Registrations -->
+        <div class="card" style="padding: 20px;">
+          <div class="flex-between" style="margin-bottom: 12px;">
+            <h3 style="font-size: 15px;">最近報名</h3>
+            <a href="/admin/registrations.html" style="font-size: 13px; color: var(--gold);">查看全部</a>
+          </div>
+          <div id="recent-registrations">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+
+        <!-- Recent Contacts -->
+        <div class="card" style="padding: 20px;">
+          <div class="flex-between" style="margin-bottom: 12px;">
+            <h3 style="font-size: 15px;">最近聯繫</h3>
+            <a href="#" style="font-size: 13px; color: var(--gold);" onclick="return false;">查看全部</a>
+          </div>
+          <div id="recent-contacts">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Courses -->
+      <div class="card" style="padding: 20px; margin-top: 20px;">
+        <div class="flex-between" style="margin-bottom: 12px;">
+          <h3 style="font-size: 15px;">即將開課</h3>
+          <a href="/admin/content.html" style="font-size: 13px; color: var(--gold);">管理課程</a>
+        </div>
+        <div id="upcoming-courses">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="/admin/content.html" class="btn btn-outline-teal btn-sm">+ 新增消息</a>
+        <a href="/admin/content.html" class="btn btn-outline-teal btn-sm">+ 新增活動</a>
+        <a href="/admin/members.html" class="btn btn-outline-teal btn-sm">會員管理</a>
+        <a href="/admin/registrations.html" class="btn btn-outline-teal btn-sm">報名管理</a>
+        <a href="/admin/payments.html" class="btn btn-outline-teal btn-sm">繳費管理</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    var trendChart = null;
+    var levelChart = null;
+
+    // Display today's date
+    document.getElementById('dashboard-date').textContent = new Date().toLocaleDateString('zh-TW', {
+      year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+    });
+
+    async function loadStats() {
+      try {
+        var result = await API.get('/admin/stats');
+        var s = result.data || result;
+        document.getElementById('stat-members').textContent = (s.totalMembers || 0).toLocaleString();
+        document.getElementById('stat-members-month').textContent = '本月新增 ' + (s.newMembers || 0);
+        document.getElementById('stat-registrations').textContent = (s.totalRegistrations || 0).toLocaleString();
+        document.getElementById('stat-registrations-month').textContent = '本月 ' + (s.monthRegistrations || 0);
+        document.getElementById('stat-revenue').textContent = formatMoney(s.totalRevenue || 0);
+        document.getElementById('stat-revenue-month').textContent = '本月 ' + formatMoney(s.monthRevenue || 0);
+        var pending = (s.pendingRegistrations || 0) + (s.unreadContacts || 0);
+        document.getElementById('stat-pending').textContent = pending.toLocaleString();
+        var details = [];
+        if (s.pendingRegistrations) details.push(s.pendingRegistrations + ' 筆報名');
+        if (s.unreadContacts) details.push(s.unreadContacts + ' 筆聯繫');
+        document.getElementById('stat-pending-detail').textContent = details.join('、') || '無待處理項目';
+      } catch (err) {
+        console.error('Stats error:', err);
+      }
+    }
+
+    async function loadDashboard() {
+      try {
+        var result = await API.get('/admin/dashboard');
+        var d = result.data || result;
+        renderTrendChart(d.monthlyTrend || []);
+        renderLevelChart(d.levelDistribution || []);
+        renderRecentRegistrations(d.recentRegistrations || []);
+        renderRecentContacts(d.recentContacts || []);
+        renderUpcomingCourses(d.upcomingCourses || []);
+      } catch (err) {
+        console.error('Dashboard error:', err);
+      }
+    }
+
+    function renderTrendChart(data) {
+      var ctx = document.getElementById('trend-chart').getContext('2d');
+      if (trendChart) trendChart.destroy();
+      var labels = data.map(function(d) { return d.month; });
+      var values = data.map(function(d) { return d.count; });
+
+      // Fill missing months
+      if (labels.length === 0) {
+        var now = new Date();
+        for (var i = 5; i >= 0; i--) {
+          var dt = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          labels.push(dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0'));
+          values.push(0);
+        }
+      }
+
+      trendChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '報名數',
+            data: values,
+            backgroundColor: 'rgba(200, 169, 81, 0.6)',
+            borderColor: '#c8a951',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    function renderLevelChart(data) {
+      var ctx = document.getElementById('level-chart').getContext('2d');
+      if (levelChart) levelChart.destroy();
+      var levelNames = { 0: '未認證', 1: 'Level 1', 2: 'Level 2', 3: 'Level 3', 4: 'Level 4' };
+      var levelColors = ['#999', '#CD7F32', '#C0C0C0', '#c8a951', '#E5E4E2'];
+      var labels = data.map(function(d) { return levelNames[d.cilt_level] || 'Level ' + d.cilt_level; });
+      var values = data.map(function(d) { return d.count; });
+      var colors = data.map(function(d) { return levelColors[d.cilt_level] || '#999'; });
+
+      levelChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{ data: values, backgroundColor: colors, borderWidth: 2, borderColor: '#fff' }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { padding: 12, font: { size: 12 } } }
+          }
+        }
+      });
+    }
+
+    function renderRecentRegistrations(list) {
+      var el = document.getElementById('recent-registrations');
+      if (list.length === 0) {
+        el.innerHTML = '<p style="color: var(--text-light); font-size: 13px;">目前無報名紀錄</p>';
+        return;
+      }
+      el.innerHTML = list.map(function(r) {
+        return '<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray-100);">' +
+          '<div>' +
+            '<div style="font-size: 14px; font-weight: 500;">' + escapeHtml(r.member_name) + '</div>' +
+            '<div style="font-size: 12px; color: var(--text-light);">' + escapeHtml(r.course_title) + '</div>' +
+          '</div>' +
+          '<div style="text-align: right;">' +
+            statusTag(r.status, REG_STATUS_LABELS) +
+            '<div style="font-size: 11px; color: var(--text-light); margin-top: 2px;">' + formatDate(r.created_at) + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function renderRecentContacts(list) {
+      var el = document.getElementById('recent-contacts');
+      if (list.length === 0) {
+        el.innerHTML = '<p style="color: var(--text-light); font-size: 13px;">目前無聯繫紀錄</p>';
+        return;
+      }
+      el.innerHTML = list.map(function(c) {
+        var unread = !c.is_read ? ' style="font-weight: 600;"' : '';
+        return '<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray-100);">' +
+          '<div>' +
+            '<div style="font-size: 14px;"' + unread + '>' + (c.is_read ? '' : '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#c8a951;margin-right:6px;"></span>') + escapeHtml(c.name) + '</div>' +
+            '<div style="font-size: 12px; color: var(--text-light);">' + escapeHtml(c.subject || c.category || '-') + '</div>' +
+          '</div>' +
+          '<div style="font-size: 11px; color: var(--text-light);">' + formatDate(c.created_at) + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function renderUpcomingCourses(list) {
+      var el = document.getElementById('upcoming-courses');
+      if (list.length === 0) {
+        el.innerHTML = '<p style="color: var(--text-light); font-size: 13px;">目前無即將開課的課程</p>';
+        return;
+      }
+      el.innerHTML = '<div class="table-wrapper"><table><thead><tr><th>課程名稱</th><th>類別</th><th>開課日期</th><th>報名人數</th></tr></thead><tbody>' +
+        list.map(function(c) {
+          var seats = c.max_seats ? ((c.enrolled_count || 0) + ' / ' + c.max_seats) : (c.enrolled_count || 0) + ' 人';
+          var typeLabel = { certification: '認證課程', general: '一般課程', seminar: '研討會' };
+          return '<tr>' +
+            '<td style="font-weight: 500;">' + escapeHtml(c.title) + '</td>' +
+            '<td>' + (typeLabel[c.type] || c.type) + '</td>' +
+            '<td>' + formatDate(c.start_date) + '</td>' +
+            '<td>' + seats + '</td>' +
+          '</tr>';
+        }).join('') +
+      '</tbody></table></div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (API.isAdmin()) {
+        loadStats();
+        loadDashboard();
+      }
+    });
+  </script>
+</body>
+</html>

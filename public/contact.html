@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聯絡我們 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="聯絡 CILT 台灣分會：課程諮詢、認證問題、合作洽詢。台北市內湖區瑞光路258巷39號5樓。">
+  <meta property="og:title" content="聯絡我們 - CILT 台灣分會">
+  <meta property="og:description" content="課程諮詢、認證問題、合作洽詢，歡迎聯繫 CILT 台灣分會。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="main-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>聯絡我們</h2>
+        <span class="page-header-en">Contact Us</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>聯絡我們</span>
+      </div>
+
+      <div class="grid grid-2" style="gap: 32px;">
+        <!-- Contact Info -->
+        <div>
+          <div class="section-title"><h3>聯絡資訊</h3></div>
+          <div class="card" style="margin-bottom: 24px;">
+            <div style="margin-bottom: 20px;">
+              <h4 style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">地址</h4>
+              <p style="font-size: 15px;">台北市內湖區瑞光路258巷39號5樓</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <h4 style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">電話</h4>
+              <p style="font-size: 15px;">02-2778-5669</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <h4 style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">傳真</h4>
+              <p style="font-size: 15px;">02-2778-3359</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <h4 style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">網站</h4>
+              <p style="font-size: 15px;"><a href="http://www.cilt.org.tw" target="_blank">http://www.cilt.org.tw</a></p>
+            </div>
+            <div>
+              <h4 style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">服務時間</h4>
+              <p style="font-size: 15px;">週一至週五 09:00 - 18:00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div>
+          <div class="section-title"><h3>線上留言</h3></div>
+          <div class="card">
+            <form id="contact-form" onsubmit="submitContact(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">姓名 <span class="required">*</span></label>
+                  <input type="text" class="form-control" id="contact-name" required placeholder="請輸入姓名">
+                  <div class="form-error hidden" id="err-name"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email <span class="required">*</span></label>
+                  <input type="email" class="form-control" id="contact-email" required placeholder="請輸入電子郵件">
+                  <div class="form-error hidden" id="err-email"></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">電話</label>
+                  <input type="tel" class="form-control" id="contact-phone" placeholder="請輸入聯絡電話">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">公司/學校</label>
+                  <input type="text" class="form-control" id="contact-company" placeholder="請輸入公司或學校名稱">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">詢問類別</label>
+                <select class="form-control" id="contact-category">
+                  <option value="">請選擇</option>
+                  <option value="seminar">研討會相關</option>
+                  <option value="course">課程內容</option>
+                  <option value="certification">認證相關</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">留言內容 <span class="required">*</span></label>
+                <textarea class="form-control" id="contact-message" required placeholder="請輸入留言內容 (最多 500 字)" maxlength="500" rows="5"></textarea>
+                <div class="form-help"><span id="msg-count">0</span> / 500</div>
+                <div class="form-error hidden" id="err-message"></div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="contact-submit">送出留言</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    // Character counter
+    document.getElementById('contact-message').addEventListener('input', function() {
+      document.getElementById('msg-count').textContent = this.value.length;
+    });
+
+    function validateForm() {
+      let valid = true;
+
+      // Reset errors
+      document.querySelectorAll('.form-error').forEach(el => el.classList.add('hidden'));
+
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const message = document.getElementById('contact-message').value.trim();
+
+      if (!name) {
+        document.getElementById('err-name').textContent = '請輸入姓名';
+        document.getElementById('err-name').classList.remove('hidden');
+        valid = false;
+      }
+
+      if (!email) {
+        document.getElementById('err-email').textContent = '請輸入電子郵件';
+        document.getElementById('err-email').classList.remove('hidden');
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('err-email').textContent = '請輸入有效的電子郵件格式';
+        document.getElementById('err-email').classList.remove('hidden');
+        valid = false;
+      }
+
+      if (!message) {
+        document.getElementById('err-message').textContent = '請輸入留言內容';
+        document.getElementById('err-message').classList.remove('hidden');
+        valid = false;
+      } else if (message.length > 500) {
+        document.getElementById('err-message').textContent = '留言內容不可超過 500 字';
+        document.getElementById('err-message').classList.remove('hidden');
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    async function submitContact(e) {
+      e.preventDefault();
+
+      if (!validateForm()) return;
+
+      const submitBtn = document.getElementById('contact-submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送出中...';
+
+      const data = {
+        name: document.getElementById('contact-name').value.trim(),
+        email: document.getElementById('contact-email').value.trim(),
+        phone: document.getElementById('contact-phone').value.trim(),
+        company: document.getElementById('contact-company').value.trim(),
+        category: document.getElementById('contact-category').value,
+        message: document.getElementById('contact-message').value.trim()
+      };
+
+      try {
+        await API.post('/contact', data);
+        showToast('留言已送出，我們會盡快回覆您！', 'success');
+        document.getElementById('contact-form').reset();
+        document.getElementById('msg-count').textContent = '0';
+      } catch (err) {
+        showToast(err.message || '送出失敗，請稍後再試', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '送出留言';
+      }
+    }
+  </script>
+</body>
+</html>

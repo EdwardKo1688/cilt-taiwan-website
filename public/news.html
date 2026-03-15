@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最新消息 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 台灣分會最新消息、協會公告、課程資訊、產業動態與國際交流等最新訊息。">
+  <meta property="og:title" content="最新消息 - CILT 台灣分會">
+  <meta property="og:description" content="CILT 台灣分會最新消息與公告。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="main-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>最新消息</h2>
+        <span class="page-header-en">News</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>最新消息</span>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">類別</label>
+          <select class="form-control" id="news-category">
+            <option value="">全部類別</option>
+            <option value="course_info">課程資訊</option>
+            <option value="announcement">協會公告</option>
+            <option value="activity">活動</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">關鍵字搜尋</label>
+          <input type="text" class="form-control" id="news-keyword" placeholder="輸入關鍵字...">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" onclick="searchNews()">搜尋</button>
+        </div>
+      </div>
+
+      <!-- News List -->
+      <div id="news-list">
+        <div class="loading"><div class="spinner"></div>載入中...</div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="news-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="news-modal">
+    <div class="modal" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 id="modal-title">消息標題</h3>
+        <button class="modal-close" onclick="closeNewsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <span class="text-light" id="modal-date"></span>
+          <span id="modal-tag"></span>
+        </div>
+        <div id="modal-content" style="line-height: 1.8;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let newsPage = 1;
+
+    function getTagClass(category) {
+      if (category === 'course_info') return 'tag-teal';
+      if (category === 'announcement') return 'tag-blue';
+      return 'tag-yellow';
+    }
+
+    async function loadNews(page) {
+      newsPage = page || 1;
+      const params = { page: newsPage, limit: 10 };
+      const category = document.getElementById('news-category').value;
+      const keyword = document.getElementById('news-keyword').value.trim();
+      if (category) params.category = category;
+      if (keyword) params.keyword = keyword;
+
+      const container = document.getElementById('news-list');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
+
+      try {
+        const result = await API.get('/news', params);
+        if (!result.data || result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state"><p>暫無消息</p></div>';
+          document.getElementById('news-pagination').innerHTML = '';
+          return;
+        }
+
+        container.innerHTML = result.data.map(item => `
+          <div class="list-item" style="cursor: pointer;" onclick="showNewsDetail(${item.id})">
+            <span class="item-date">${formatDate(item.created_at)}</span>
+            <span class="item-tag">
+              <span class="tag ${getTagClass(item.category)}">${NEWS_CATEGORIES[item.category] || item.category}</span>
+            </span>
+            <span class="item-title">${escapeHtml(item.title)}</span>
+          </div>
+        `).join('');
+
+        renderPagination(document.getElementById('news-pagination'), {
+          page: newsPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadNews
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state"><p>載入失敗，請稍後再試</p></div>';
+      }
+    }
+
+    function searchNews() {
+      loadNews(1);
+    }
+
+    async function showNewsDetail(id) {
+      try {
+        const result = await API.get('/news/' + id);
+        const item = result.data || result;
+        document.getElementById('modal-title').textContent = item.title || '';
+        document.getElementById('modal-date').textContent = formatDate(item.created_at);
+        document.getElementById('modal-tag').innerHTML = `<span class="tag ${getTagClass(item.category)}">${NEWS_CATEGORIES[item.category] || item.category}</span>`;
+        document.getElementById('modal-content').innerHTML = item.content || '';
+        document.getElementById('news-modal').classList.add('show');
+      } catch (err) {
+        showToast('無法載入消息詳情', 'error');
+      }
+    }
+
+    function closeNewsModal() {
+      document.getElementById('news-modal').classList.remove('show');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('news-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeNewsModal();
+    });
+
+    // Check URL for specific news id
+    const urlParams = new URLSearchParams(window.location.search);
+    const newsId = urlParams.get('id');
+    if (newsId) {
+      showNewsDetail(newsId);
+    }
+
+    // Enter key search
+    document.getElementById('news-keyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchNews();
+    });
+
+    loadNews(1);
+  </script>
+</body>
+</html>

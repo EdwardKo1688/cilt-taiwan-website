@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>活動資訊 - CILT 英國皇家物流與運輸學會 台灣分會</title>
+  <meta name="description" content="CILT 台灣分會活動資訊：研討會、課程、企業參訪、論壇、展覽及講座等專業活動。">
+  <meta property="og:title" content="活動資訊 - CILT 台灣分會">
+  <meta property="og:description" content="研討會、課程、企業參訪、論壇等專業物流與運輸活動。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">CILT</div>
+        <div class="logo-text">
+          <span class="brand-en">The Chartered Institute of Logistics & Transport</span>
+          <span class="brand-zh">英國皇家物流與運輸學會 台灣分會</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu">
+        <li><a href="/about.html" class="nav-link">關於協會</a></li>
+        <li><a href="/news.html" class="nav-link">最新消息</a></li>
+        <li><a href="/activities.html" class="nav-link">活動資訊</a></li>
+        <li><a href="/certification.html" class="nav-link">認證專區</a></li>
+        <li><a href="/register.html" class="nav-link">線上報名</a></li>
+        <li><a href="/exam.html" class="nav-link">考試資訊</a></li>
+        <li><a href="/downloads.html" class="nav-link">下載專區</a></li>
+        <li><a href="/columns.html" class="nav-link">經驗分享</a></li>
+      </ul>
+      <div class="auth-area"></div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="main-content" style="max-width: 1200px; margin: 0 auto;">
+      <div class="page-header">
+        <div class="page-header-icon"></div>
+        <h2>活動資訊</h2>
+        <span class="page-header-en">Activities</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="/">首頁</a>
+        <span class="separator">/</span>
+        <span>活動資訊</span>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="form-group">
+          <label class="form-label">活動類別</label>
+          <select class="form-control" id="activity-category">
+            <option value="">全部類別</option>
+            <option value="seminar">研討會</option>
+            <option value="course">課程</option>
+            <option value="visit">參訪</option>
+            <option value="forum">論壇</option>
+            <option value="exhibition">展覽</option>
+            <option value="lecture">講座</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">開始日期</label>
+          <input type="date" class="form-control" id="activity-date-start">
+        </div>
+        <div class="form-group">
+          <label class="form-label">結束日期</label>
+          <input type="date" class="form-control" id="activity-date-end">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">關鍵字</label>
+          <input type="text" class="form-control" id="activity-keyword" placeholder="輸入關鍵字...">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" onclick="searchActivities()">搜尋</button>
+        </div>
+      </div>
+
+      <!-- Activity Grid -->
+      <div id="activity-grid" class="grid grid-3">
+        <div class="loading" style="grid-column: 1/-1;"><div class="spinner"></div>載入中...</div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="activity-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <h3>英國皇家物流與運輸學會 台灣分會</h3>
+        <p>台北市內湖區瑞光路258巷39號5樓</p>
+        <p>Tel: 02-2778-5669 ｜ Fax: 02-2778-3359</p>
+        <p>http://www.cilt.org.tw</p>
+      </div>
+      <div class="footer-logo">
+        <div class="logo-icon">CILT</div>
+        <span>The Chartered Institute of<br>Logistics & Transport</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        Copyright &copy; 2009 Taiwan Association of Logistic Management. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    let activityPage = 1;
+
+    async function loadActivities(page) {
+      activityPage = page || 1;
+      const params = { page: activityPage, limit: 9 };
+      const category = document.getElementById('activity-category').value;
+      const dateStart = document.getElementById('activity-date-start').value;
+      const dateEnd = document.getElementById('activity-date-end').value;
+      const keyword = document.getElementById('activity-keyword').value.trim();
+
+      if (category) params.category = category;
+      if (dateStart) params.date_start = dateStart;
+      if (dateEnd) params.date_end = dateEnd;
+      if (keyword) params.keyword = keyword;
+
+      const container = document.getElementById('activity-grid');
+      container.innerHTML = '<div class="loading" style="grid-column:1/-1;"><div class="spinner"></div>載入中...</div>';
+
+      try {
+        const result = await API.get('/activities', params);
+        if (!result.data || result.data.length === 0) {
+          container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p>暫無活動資訊</p></div>';
+          document.getElementById('activity-pagination').innerHTML = '';
+          return;
+        }
+
+        container.innerHTML = result.data.map(item => `
+          <div class="card">
+            <div class="card-header">
+              <span class="tag tag-teal">${ACTIVITY_CATEGORIES[item.category] || item.category}</span>
+              ${item.status === 'registration_open' ? '<span class="tag tag-green" style="margin-left: 8px;">報名中</span>' : ''}
+              ${item.status === 'ended' ? '<span class="tag tag-gray" style="margin-left: 8px;">已結束</span>' : ''}
+            </div>
+            <h3 class="card-title" style="font-size: 16px; min-height: 48px;">${escapeHtml(item.title)}</h3>
+            <p class="card-body" style="font-size: 14px; margin-top: 8px; color: var(--text-light); min-height: 40px;">
+              ${escapeHtml(item.description || '').substring(0, 80)}${(item.description || '').length > 80 ? '...' : ''}
+            </p>
+            <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 13px; color: var(--text-light);">${item.event_date ? formatDate(item.event_date) : ''}</div>
+                <div style="font-size: 12px; color: var(--text-light);">${item.location ? escapeHtml(item.location) : ''}</div>
+              </div>
+              <a href="/activities.html?id=${item.id}" class="btn btn-sm btn-outline-teal">詳情 &rarr;</a>
+            </div>
+          </div>
+        `).join('');
+
+        renderPagination(document.getElementById('activity-pagination'), {
+          page: activityPage,
+          totalPages: result.totalPages || 1,
+          onChange: loadActivities
+        });
+      } catch (err) {
+        container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p>載入失敗，請稍後再試</p></div>';
+      }
+    }
+
+    function searchActivities() {
+      loadActivities(1);
+    }
+
+    // Enter key search
+    document.getElementById('activity-keyword').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchActivities();
+    });
+
+    loadActivities(1);
+  </script>
+</body>
+</html>
