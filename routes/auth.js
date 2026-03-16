@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ error: '登入失敗，請稍後再試' });
+    res.status(500).json({ error: '登入失敗，請稍後再試', debug: err.message });
   }
 });
 
