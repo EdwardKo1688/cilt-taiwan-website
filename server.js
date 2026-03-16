@@ -33,6 +33,18 @@ async function startServer() {
       try { db.exec(stmt + ';'); } catch (e) { console.error('Seed error:', e.message); }
     }
     console.log('Database seeded with initial data');
+  } else {
+    // Fix admin password hash if incorrect (migration)
+    const bcrypt = require('bcryptjs');
+    const admin = db.prepare("SELECT id, password_hash FROM members WHERE email = 'admin@cilt.org.tw'").get();
+    if (admin) {
+      const valid = await bcrypt.compare('admin123', admin.password_hash);
+      if (!valid) {
+        const newHash = await bcrypt.hash('admin123', 12);
+        db.prepare("UPDATE members SET password_hash = ? WHERE email = 'admin@cilt.org.tw'").run(newHash);
+        console.log('Admin password hash fixed');
+      }
+    }
   }
 
   // Make db available to routes

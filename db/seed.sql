@@ -2,7 +2,7 @@
 
 -- 管理員帳號 (密碼: admin123)
 INSERT INTO members (email, password_hash, name, phone, role, email_verified, cilt_level)
-VALUES ('admin@cilt.org.tw', '$2a$12$LJ3m4ys2Y8H8RpGq5VvYxOQZh0.Kx5YEKMQ5Do8TFr.XqOgVxUZKi', '系統管理員', '02-2778-5669', 'admin', 1, 0);
+VALUES ('admin@cilt.org.tw', '$2a$12$LO3qR2MxiXwOuh5IyOqLWOm6AZN7RZiOsBd61Z/1iRYEHFCC6u/pW', '系統管理員', '02-2778-5669', 'admin', 1, 0);
 
 -- 認證等級
 INSERT INTO cert_levels (level_number, name_zh, name_en, description, requirements, subjects, exam_format) VALUES
