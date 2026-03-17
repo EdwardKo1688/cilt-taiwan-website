@@ -95,7 +95,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: member.id, email: member.email, name: member.name, role: member.role, cilt_level: member.cilt_level },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
     res.json({
@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ error: '登入失敗，請稍後再試', debug: err.message });
+    res.status(500).json({ error: '登入失敗，請稍後再試' });
   }
 });
 
